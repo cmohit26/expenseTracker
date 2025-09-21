@@ -38,64 +38,50 @@ public class UserController {
         return ResponseEntity.ok("test");
     }
 
-    //Works
-//    @GetMapping("getUser/{id}")
-    @GetMapping("user/{id}")
+    @GetMapping("/v1/user/{id}")
     public User getUser(@PathVariable Integer id){
         System.out.println("Getting user for "+ id);
         return userService.getUserById(id);
     }
 
-    //WORKS
-//    @GetMapping("/deleteUser/{id}")
-    @DeleteMapping("user/{id}")
+    @DeleteMapping("/v1/user/{id}")
     public String deleteUser(@PathVariable Integer id) {
         System.out.println("Deleting user with ID: " + id);
-//        log.info("jhgjh");
         userService.deleteUser(id);
         return "redirect:/admin/userInfo"; // go back to admin page
     }
 
-    //TestAgain
-//    @PostMapping("/editUser/{id}")
-    @PutMapping("/user/{id}")
+    @PutMapping("/v1/user/{id}")
     public String editUser(@PathVariable Integer id, @ModelAttribute User user) {
         user.setId(id); // Ensure the ID from URL is used
         userService.updateUser(user);
         return "redirect:/admin/userInfo"; // Redirect to your main page or user list
     }
 
-    //    @PostMapping("/addUser")
-    @PostMapping("/user")
+    @PostMapping("/v1/user")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return ResponseEntity.ok("User registered successfully");
     }
 
-    //Works
-//    @GetMapping("/allUsers")
-    @GetMapping("/users")
+    @GetMapping("/v1/users")
     public List<User> getAllUsers(){
         System.out.println("Getting all users");
         return userService.getAllUsers();
     }
 
-    //WORKS
-//    @GetMapping("/sortUsersBy/{field}")
-    @GetMapping("/users/sortBy/{field}")
+    @GetMapping("/v1/users/sortBy/{field}")
     public List<User> sortUsers(@PathVariable String field, Model model) {
         List<User> sortedUsers = userService.getSortedUsersBy(field);
         System.out.println("Based on field : "+ field + "|| Sorted users are: " + sortedUsers);
         model.addAttribute("users", sortedUsers);
         return sortedUsers;
-        //Supposed to return this for this page to work
-        //return "AdminPages/userInfo"; // your Thymeleaf template namez
     }
 
     //WORKS
 //    @GetMapping("/searchUsers")
-    @GetMapping("/users/search")
+    @GetMapping("/v1/users/search")
     public List<User> searchUsers(@RequestParam(value = "search", required = false) String search) {
         List<User> users;
         System.out.println("Searching with" + search);
@@ -107,6 +93,9 @@ public class UserController {
         System.out.println("Users Data: " + users);
         return users;
     }
+
+
+//    DONT KNOW How to change
 
     @GetMapping("/currentUser")
     public ResponseEntity<User> getCurrentUser(HttpSession session, Authentication authentication) {
