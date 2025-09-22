@@ -1,0 +1,154 @@
+.authWrapper {
+  position: relative;
+  min-height: calc(100vh - 43px);
+  padding: 32px 24px;
+  background: linear-gradient(135deg, #eef2ff 0%, #e0f7fa 100%);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.centerContainer {
+  width: 100%;
+  max-width: 720px;
+}
+
+.title {
+  margin: 0 0 16px 0;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: saturate(180%) blur(8px);
+  border-radius: 12px;
+  padding: 6px;
+  width: fit-content;
+  margin-bottom: 12px;
+}
+
+.tab {
+  border: none;
+  background: transparent;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease, transform 120ms ease;
+}
+
+.tab:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.tabActive {
+  background: white;
+  color: #0b63ce;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 1px rgba(16, 24, 40, 0.04);
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(17, 24, 39, 0.08), 0 4px 8px rgba(17, 24, 39, 0.06);
+  overflow: hidden;
+}
+
+.cardInner {
+  position: relative;
+  padding: 20px 20px 24px 20px;
+}
+
+.contentSizer {
+  position: relative;
+  overflow: hidden;
+  transition: height 320ms ease;
+}
+
+.panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 220ms ease, transform 220ms ease;
+  pointer-events: none;
+}
+
+.panelActive {
+  position: relative;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.form {
+  display: grid;
+  gap: 10px;
+}
+
+.label {
+  font-size: 12px;
+  color: #334155;
+  font-weight: 600;
+}
+
+.input {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.input:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.submitButton {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 80ms ease, filter 140ms ease;
+}
+
+.submitButton:hover {
+  filter: brightness(1.05);
+}
+
+.submitButton:active {
+  transform: translateY(1px);
+}
+
+.switchButton {
+  background: #f1f5f9;
+  color: #0f172a;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sectionTitle {
+  margin: 0 0 8px 0;
+}
+
+

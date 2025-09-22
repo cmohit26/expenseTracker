@@ -1,0 +1,77 @@
+/* Top black toolbar extracted from App.jsx */
+.topBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  z-index: 4;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.barItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.menuButton {
+  background: transparent;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  padding: 12px 16px;
+}
+
+.menuLabel {
+  margin-left: 6px;
+}
+
+.titleLeft {
+  flex: 1;
+}
+
+.appTitle {
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.actionsRight {
+  margin-left: auto;
+}
+
+.welcomeText {
+  font-weight: 500;
+}
+
+.actionButton {
+  border: none;
+  border-radius: 12px;
+  padding: 8px 24px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.login {
+  background: #2196F3;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(33,150,243,0.15);
+}
+
+.logout {
+  background: #f44336;
+  color: #fff;
+  margin-left: 10px;
+  box-shadow: 0 2px 8px rgba(244,67,54,0.15);
+}
+
+@media (max-width: 768px) {
+  .menuLabel { display: none; }
+}
