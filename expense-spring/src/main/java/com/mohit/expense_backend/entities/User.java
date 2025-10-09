@@ -9,8 +9,6 @@ import jakarta.persistence.*;
 
 @Entity
 //@Data
-//@Getter
-//@Setter
 @Table(name = "users")
 public class User {
 

@@ -6,6 +6,7 @@ import UsersTable from './components/UsersTable';
 import UserEditModal from './components/UserEditModal';
 import UsersSortModal from './components/UsersSortModal';
 import HomeDashboard from './components/HomeDashboard';
+import IncomePage from './components/IncomePage';
 import AuthPage from './components/AuthPage';
 import { getCurrentUser } from './services/UserServices';  // Import the API call
 import { logoutUser } from './services/UserServices';  // Ensure correct import
@@ -85,6 +86,8 @@ function App() {
             openSortModal={openSortModal}
           />
         );
+      case 'income':
+        return <IncomePage />;
       default:
         return <HomeDashboard />;
     }

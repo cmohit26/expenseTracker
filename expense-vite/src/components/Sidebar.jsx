@@ -72,6 +72,13 @@ const Sidebar = ({currentUser, onNavigate, currentPage}) => {
           >
             <i className="fa fa-lock"></i> ADMIN Information
           </a>
+          <a 
+            href="#" 
+            className={`w3-bar-item w3-button w3-padding ${currentPage === 'income' ? 'w3-blue' : ''}`}
+            onClick={() => handleNavigation('income')}
+          >
+            <i className="fa fa-money"></i> Income
+          </a>
         </div>
       </nav>
     </>
