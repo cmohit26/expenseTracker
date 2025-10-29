@@ -33,13 +33,14 @@ public class ExpenseService {
         expenseRepository.deleteById(id);
     }
 
-    public List<Expense> getExpensesByCategory(Integer userId, Integer categoryId) {
-        return expenseRepository.findByUserIdAndCategoryId(userId, categoryId);
-    }
-
     public List<Expense> getRecentExpenses(Integer userId, int limit) {
         // For this to work, make sure your repository has a method like:
         // List<Expense> findTop10ByUserIdOrderByDateDesc(Integer userId);
         return expenseRepository.findTop10ByUserIdOrderByDateDesc(userId); // adjust limit in repo if needed
     }
+
+//    public List<Expense> getExpensesByCategory(Integer userId, Integer categoryId) {
+//        return expenseRepository.findByUserIdAndCategoryId(userId, categoryId);
+//    }
+
 }

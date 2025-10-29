@@ -1,7 +1,5 @@
-package com.mohit.expense_backend.services;
+package com.mohit.expense_backend.unusedFfiles;
 
-import com.mohit.expense_backend.entities.Income;
-import com.mohit.expense_backend.repository.IncomeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,5 @@
-package com.mohit.expense_backend.repository;
+package com.mohit.expense_backend.unusedFfiles;
 
-import com.mohit.expense_backend.entities.Income;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

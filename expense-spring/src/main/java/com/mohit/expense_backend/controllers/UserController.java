@@ -59,7 +59,7 @@ public class UserController {
     }
 
     @PostMapping("/v1/user")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
+    public ResponseEntity<?> addUser(@RequestBody User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return ResponseEntity.ok("User registered successfully");

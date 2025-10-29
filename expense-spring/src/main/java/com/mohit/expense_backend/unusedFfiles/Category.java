@@ -1,4 +1,4 @@
-package com.mohit.expense_backend.entities;
+package com.mohit.expense_backend.unusedFfiles;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,5 +1,6 @@
 package com.mohit.expense_backend.entities;
 
+import com.mohit.expense_backend.unusedFfiles.Category;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,10 +22,6 @@ public class Expense {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
-
     private Double amount;
 
     private Date date;
@@ -45,14 +42,6 @@ public class Expense {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
     }
 
     public Double getAmount() {

@@ -9,7 +9,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
 
     List<Expense> findByUserId(Integer userId);
 
-    List<Expense> findByUserIdAndCategoryId(Integer userId, Integer categoryId);
+//    List<Expense> findByUserIdAndCategoryId(Integer userId, Integer categoryId);
 
     List<Expense> findTop10ByUserIdOrderByDateDesc(Integer userId);
 }
