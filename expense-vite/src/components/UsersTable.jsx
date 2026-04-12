@@ -1,38 +1,64 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './UsersTable.module.css';
-import { listOfUsers, deleteUser } from '../services/UserServices';
+import { listOfUsers, deleteUser, getSortedUsers } from '../services/UserServices';
 
 // UsersTable: Displays users with search, sort trigger, edit/delete actions.
-const UsersTable = ({ openEditModal, openSortModal }) => {
+const UsersTable = ({ openEditModal, openSortModal, sortColumn }) => {
 
-  const [users, setUsers] = useState([])
-  
+  const [users, setUsers] = useState([]);
+
   const loadUsers = () => {
-  listOfUsers()
-    .then((response) => {
-      setUsers(response.data);
-    })
-    .catch((error) => {
-      console.error("❌ Error loading users:", error);
-    });
+    listOfUsers()
+      .then((response) => {
+        setUsers(response.data);
+      })
+      .catch((error) => {
+        console.error("❌ Error loading users:", error);
+      });
   };
-  
+
+  const loadSortedUsers = (column) => {
+    getSortedUsers(column)
+      .then((response) => {
+        setUsers(response.data);
+      })
+      .catch((error) => {
+        console.error("❌ Error sorting users:", error);
+      });
+  };
+
+  // 🔥 Load users on first render
   useEffect(() => {
     loadUsers();
-  }, [])
-  
+  }, []);
+
+  // 🔥 React to sorting changes
+  useEffect(() => {
+    if (sortColumn) {
+      loadSortedUsers(sortColumn);
+    }
+  }, [sortColumn]);
+
   const handleEditClick = (userId) => {
     openEditModal(userId);
   };
-  
+
   const handleDeleteClick = (userId, userName) => {
-    const confirmDelete = window.confirm(`Are you sure you want to delete user "${userName}"? This action cannot be undone.`);
-    
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete user "${userName}"? This action cannot be undone.`
+    );
+
     if (confirmDelete) {
       deleteUser(userId)
         .then(() => {
           alert('User deleted successfully!');
-          loadUsers();
+          
+          // 🔁 Reload depending on sort state
+          if (sortColumn) {
+            loadSortedUsers(sortColumn);
+          } else {
+            loadUsers();
+          }
         })
         .catch(error => {
           console.error('Error deleting user:', error);
@@ -55,16 +81,26 @@ const UsersTable = ({ openEditModal, openSortModal }) => {
         <div className={styles.rowPadding}>
           <div>
             <form action="/admin/users" method="get" className={styles.searchForm}>
-              
-              <input type="text" id="searchBox" name="search" placeholder="Search..." className={styles.searchInput} />
-
-              <button type="submit" className={styles.searchButton}>Search</button>
-
+              <input
+                type="text"
+                id="searchBox"
+                name="search"
+                placeholder="Search..."
+                className={styles.searchInput}
+              />
+              <button type="submit" className={styles.searchButton}>
+                Search
+              </button>
             </form>
+
             <button onClick={openSortModal} className={styles.sortButton}>
               Sort Table &gt;
             </button>
-            <h5 className={styles.tableTitle}><b>All Transaction Details</b></h5>
+
+            <h5 className={styles.tableTitle}>
+              <b>All Transaction Details</b>
+            </h5>
+
             <table className={styles.table}>
               <thead>
                 <tr>
@@ -72,6 +108,8 @@ const UsersTable = ({ openEditModal, openSortModal }) => {
                   <th>ID</th>
                   <th>First Name</th>
                   <th>Last Name</th>
+                  <th>Date of Birth</th>
+                  <th>Age</th>
                   <th>Role</th>
                   <th>Email ID</th>
                   <th>Edit</th>
@@ -85,7 +123,9 @@ const UsersTable = ({ openEditModal, openSortModal }) => {
                     <td>{index + 1}</td>
                     <td>{user.firstName}</td>
                     <td>{user.lastName}</td>
-                    <td>{user.role}</td>
+                    <td>{user.dateOfBirth}</td>
+                    <td>{user.age}</td>
+                    <td>{user.roles}</td>
                     <td>{user.email}</td>
                     <td>
                       <button
@@ -98,7 +138,9 @@ const UsersTable = ({ openEditModal, openSortModal }) => {
                     </td>
                     <td>
                       <button
-                        onClick={() => handleDeleteClick(user.id, `${user.firstName} ${user.lastName}`)}
+                        onClick={() =>
+                          handleDeleteClick(user.id, `${user.firstName} ${user.lastName}`)
+                        }
                         className={styles.deleteButton}
                         title="Delete User"
                       >
@@ -109,6 +151,7 @@ const UsersTable = ({ openEditModal, openSortModal }) => {
                 ))}
               </tbody>
             </table>
+
           </div>
         </div>
       </div>
@@ -118,5 +161,3 @@ const UsersTable = ({ openEditModal, openSortModal }) => {
 };
 
 export default UsersTable;
-
-

@@ -1,6 +1,5 @@
 package com.mohit.expense_backend.entities;
 
-import com.mohit.expense_backend.unusedFfiles.Category;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

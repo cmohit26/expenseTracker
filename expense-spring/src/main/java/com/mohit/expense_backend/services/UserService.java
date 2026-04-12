@@ -1,6 +1,8 @@
 package com.mohit.expense_backend.services;
 
 
+import com.mohit.expense_backend.dto.UserRequestDTO;
+import com.mohit.expense_backend.dto.UserResponseDTO;
 import com.mohit.expense_backend.entities.User;
 import com.mohit.expense_backend.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +15,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -24,29 +27,60 @@ public class UserService {
     private UserRepository userRepository;
 
     private final BCryptPasswordEncoder passwordEncoder;
+    public UserResponseDTO mapToResponseDTO(User user) {
+        UserResponseDTO dto = new UserResponseDTO();
+        dto.setId(user.getId());
+        dto.setEmail(user.getEmail());
+        dto.setRoles(user.getRoles());
+        dto.setFullName(convertToFullName(user.getFirstName(), user.getLastName()));
+        dto.setAge(calculateAge(user.getDateOfBirth()));
+
+        //because of frontend
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
+        dto.setDateOfBirth(user.getDateOfBirth());
+
+        return dto;
+    }
+
+    private User mapToEntity(UserRequestDTO dto) {
+        User user = new User();
+        user.setFirstName(dto.getFirstName());
+        user.setLastName(dto.getLastName());
+        user.setEmail(dto.getEmail());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setRoles(dto.getRoles());
+        user.setDateOfBirth(dto.getDateOfBirth());
+        return user;
+    }
 
     public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<User> getAllUsers(){
-        return userRepository.findAll();
+    public List<UserResponseDTO> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(this::mapToResponseDTO)
+                .toList();
     }
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    public User getUserById(Integer id) {
-        return userRepository.findById(id)
+    public UserResponseDTO getUserById(Integer id) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "No user with ID " + id + " found"
                 ));
+
+        return mapToResponseDTO(user);
     }
 
-    public String addUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public String addUser(UserRequestDTO dto) {
+        User user = mapToEntity(dto);
         userRepository.save(user);
         return "User Added";
     }
@@ -60,20 +94,26 @@ public class UserService {
         return null;
     }
 
-    public List<User> getSortedUsersBy(String field) {
-        switch (field) {
-            case "id":
-            case "firstName":
-            case "email":
-            case "roles":
-                return userRepository.findAll(Sort.by(Sort.Direction.DESC, field));
-            default:
-                return userRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+    public List<UserResponseDTO> getSortedUsersBy(String field) {
+
+        if(field.equalsIgnoreCase("age")){
+            return userRepository.findAll(Sort.by(Sort.Direction.DESC, "dateOfBirth"))
+                    .stream()
+                    .map(this::mapToResponseDTO)
+                    .toList();
         }
+
+        return userRepository.findAll(Sort.by(Sort.Direction.ASC, field))
+                .stream()
+                .map(this::mapToResponseDTO)
+                .toList();
     }
 
-    public List<User> searchUsers(String search) {
-        return userRepository.findByFirstNameContainingIgnoreCase(search);
+    public List<UserResponseDTO> searchUsers(String search) {
+        return userRepository.findByFirstNameContainingIgnoreCase(search)
+                .stream()
+                .map(this::mapToResponseDTO)
+                .toList();
     }
 
     public boolean authenticateUser(String email, String password){
@@ -88,6 +128,20 @@ public class UserService {
         }
 
         return true;
+    }
+
+    private int calculateAge(LocalDate dob) {
+        if (dob == null) return 0;
+        return Period.between(dob, LocalDate.now()).getYears();
+    }
+
+    private String convertToFullName(String fname, String lname) {
+        StringBuilder fullName = new StringBuilder();
+
+        if (fname != null) fullName.append(fname).append(" ");
+        if (lname != null) fullName.append(lname);
+
+        return fullName.toString().trim();
     }
 
 }

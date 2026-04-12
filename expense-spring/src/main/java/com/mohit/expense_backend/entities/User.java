@@ -2,6 +2,8 @@ package com.mohit.expense_backend.entities;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 
 // When lombok was not working
 // :Added <scope>compile<scope>
@@ -22,8 +24,8 @@ public class User {
     @Column(name = "last_name", nullable = false, length = 100)
     private String lastName;
 
-    @Column
-    private Integer age;
+    @Column(name = "date_of_birth", nullable = false)
+    private LocalDate dateOfBirth;
 
     @Column(name = "roles")
     private String roles;
@@ -40,7 +42,7 @@ public class User {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", age=" + age +
+                ", dateOfBirth=" + dateOfBirth +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 '}';
@@ -70,12 +72,12 @@ public class User {
         this.lastName = lastName;
     }
 
-    public Integer getAge() {
-        return age;
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
     public String getRoles() {

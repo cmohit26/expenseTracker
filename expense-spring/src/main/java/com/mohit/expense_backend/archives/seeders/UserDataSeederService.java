@@ -92,8 +92,10 @@ public class UserDataSeederService {
         String email = generateEmail(firstName, lastName, id);
         tempUserObject.setEmail(email);
 
-        // Optional: generate random age
-        tempUserObject.setAge(generateRandomAge());
+//        // Optional: generate random age
+//        tempUserObject.setAge(generateRandomAge());
+
+        tempUserObject.setDateOfBirth(generateRandomDateOfBirth());
 
         tempUserObject.setPassword(hashedPassword);
 

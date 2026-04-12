@@ -1,6 +1,8 @@
 package com.mohit.expense_backend.controllers;
 
 import com.mohit.expense_backend.Security.UserPrincipal;
+import com.mohit.expense_backend.dto.UserRequestDTO;
+import com.mohit.expense_backend.dto.UserResponseDTO;
 import com.mohit.expense_backend.entities.User;
 import com.mohit.expense_backend.repository.UserRepository;
 import com.mohit.expense_backend.services.UserService;
@@ -11,13 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.StringJoiner;
 
 @RestController
 @Slf4j
@@ -39,8 +37,7 @@ public class UserController {
     }
 
     @GetMapping("/v1/user/{id}")
-    public User getUser(@PathVariable Integer id){
-        System.out.println("Getting user for "+ id);
+    public UserResponseDTO getUser(@PathVariable Integer id){
         return userService.getUserById(id);
     }
 
@@ -59,53 +56,45 @@ public class UserController {
     }
 
     @PostMapping("/v1/user")
-    public ResponseEntity<?> addUser(@RequestBody User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+    public ResponseEntity<?> addUser(@RequestBody UserRequestDTO dto) {
+        userService.addUser(dto);
         return ResponseEntity.ok("User registered successfully");
     }
 
     @GetMapping("/v1/users")
-    public List<User> getAllUsers(){
-        System.out.println("Getting all users");
+    public List<UserResponseDTO> getAllUsers(){
         return userService.getAllUsers();
     }
 
     @GetMapping("/v1/users/sortBy/{field}")
-    public List<User> sortUsers(@PathVariable String field, Model model) {
-        List<User> sortedUsers = userService.getSortedUsersBy(field);
-        System.out.println("Based on field : "+ field + "|| Sorted users are: " + sortedUsers);
-        model.addAttribute("users", sortedUsers);
-        return sortedUsers;
+    public List<UserResponseDTO> sortUsers(@PathVariable String field) {
+        return userService.getSortedUsersBy(field);
     }
 
-    //WORKS
-//    @GetMapping("/searchUsers")
     @GetMapping("/v1/users/search")
-    public List<User> searchUsers(@RequestParam(value = "search", required = false) String search) {
-        List<User> users;
-        System.out.println("Searching with" + search);
+    public List<UserResponseDTO> searchUsers(
+            @RequestParam(value = "search", required = false) String search) {
+
+        System.out.println("Searching with " + search);
+
         if (search != null && !search.trim().isEmpty()) {
-            users = userService.searchUsers(search); // Search users based on input
+            return userService.searchUsers(search);
         } else {
-            users = userService.getAllUsers(); // If search is empty, show all users
+            return userService.getAllUsers();
         }
-        System.out.println("Users Data: " + users);
-        return users;
     }
-
-
-//    DONT KNOW How to change
 
     @GetMapping("/currentUser")
-    public ResponseEntity<User> getCurrentUser(HttpSession session, Authentication authentication) {
+    public ResponseEntity<UserResponseDTO> getCurrentUser(Authentication authentication) {
+
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         User user = userRepository.findByEmail(userPrincipal.getUsername());
-        return ResponseEntity.ok(user);
+
+        return ResponseEntity.ok(userService.mapToResponseDTO(user));
     }
 
     @PostMapping("/login")

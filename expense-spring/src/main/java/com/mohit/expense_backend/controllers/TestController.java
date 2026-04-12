@@ -3,7 +3,9 @@ package com.mohit.expense_backend.controllers;
 import com.mohit.expense_backend.entities.User;
 import com.mohit.expense_backend.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -21,6 +21,7 @@ function App() {
   const [isSortModalOpen, setSortModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [tableKey, setTableKey] = useState(0); // For forcing table refresh
+  const [sortColumn, setSortColumn] = useState(null);  // New: holds current sort column
 
   // Keep current user in sync when changing pages (except auth)
   useEffect(() => {
@@ -37,13 +38,13 @@ function App() {
     }
   }, [currentPage]);
 
-
   // Switch current page and persist it in localStorage
   const handleNavigation = (page) => {
     setCurrentPage(page);
     localStorage.setItem('currentPage', page);
     if (page === 'auth') {
       setCurrentUser(null);  // Clear user on logout
+      setSortColumn(null);   // Reset sorting when logging out or changing page
     }
   };
 
@@ -52,12 +53,12 @@ function App() {
     setSelectedUserId(userId);
     setEditModalOpen(true);
   };
-  
+
   const closeEditModal = () => {
     setEditModalOpen(false);
     setSelectedUserId(null);
   };
-  
+
   const openSortModal = () => setSortModalOpen(true);
   const closeSortModal = () => setSortModalOpen(false);
 
@@ -66,10 +67,10 @@ function App() {
     setTableKey(prev => prev + 1);
   };
 
-  // Navigate to server-side sort (placeholder)
+  // Update sorting column state, close modal
   const sortTableBy = (column) => {
-    console.log('Sort by:', column);
-    window.location.href = `/sortUsersBy/${column}`;
+    setSortColumn(column);
+    setSortModalOpen(false);
   };
 
   const renderCurrentPage = () => {
@@ -84,6 +85,7 @@ function App() {
             key={tableKey}
             openEditModal={openEditModal}
             openSortModal={openSortModal}
+            sortColumn={sortColumn}  // Pass current sorting column to UsersTable
           />
         );
       case 'income':
@@ -98,7 +100,7 @@ function App() {
       {/* Top Bar extracted to Header */}
       <Header
         currentUser={currentUser}
-        onMenuClick={() => document.getElementById('mySidebar').style.display = 'block'}
+        onMenuClick={() => (document.getElementById('mySidebar').style.display = 'block')}
         onLoginClick={() => handleNavigation('auth')}
         onLogoutClick={async () => {
           try {
@@ -111,13 +113,17 @@ function App() {
       />
 
       {/* Sidebar */}
-      <Sidebar 
+      <Sidebar
         currentUser={currentUser}
-        onNavigate={handleNavigation} 
-        currentPage={currentPage} />
+        onNavigate={handleNavigation}
+        currentPage={currentPage}
+      />
 
       {/* Main Content */}
-      <div className="w3-main" style={{ marginLeft: '300px', marginTop: '56px', minHeight: '100vh' }}>
+      <div
+        className="w3-main"
+        style={{ marginLeft: '300px', marginTop: '56px', minHeight: '100vh' }}
+      >
         {renderCurrentPage()}
 
         <UserEditModal
@@ -127,7 +133,11 @@ function App() {
           onUserUpdated={handleUserUpdated}
         />
 
-        <UsersSortModal isOpen={isSortModalOpen} onClose={closeSortModal} sortTableBy={sortTableBy} />
+        <UsersSortModal
+          isOpen={isSortModalOpen}
+          onClose={closeSortModal}
+          sortTableBy={sortTableBy}
+        />
       </div>
     </div>
   );
