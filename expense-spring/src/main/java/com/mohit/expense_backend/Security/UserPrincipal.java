@@ -18,6 +18,10 @@ public class UserPrincipal implements UserDetails {
         this.user = user;
     }
 
+    public User getUser() {
+        return user;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         String roles = user.getRoles(); // adapt to your entity

@@ -33,8 +33,6 @@ public class ExpenseService {
     }
 
     public List<Expense> getRecentExpenses(Integer userId, int limit) {
-        // For this to work, make sure your repository has a method like:
-        // List<Expense> findTop10ByUserIdOrderByDateDesc(Integer userId);
         return expenseRepository.findTop10ByUserIdOrderByDateDesc(userId); // adjust limit in repo if needed
     }
 
