@@ -26,9 +26,9 @@ public class IncomeController {
     }
 
     // Get all incomes for a user
-    @GetMapping("/{userId}")
-    public List<Income> getUserIncomes(@PathVariable int userId) {
-        return incomeService.getUserIncomes(userId);
+    @GetMapping("/me")
+    public List<Income> getMyIncomes(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return incomeService.getUserIncomes(userPrincipal.getUser());
     }
 
     // Update income

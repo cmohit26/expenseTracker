@@ -1,5 +1,6 @@
 package com.mohit.expense_backend.IncomeStuffDeleteLATER;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mohit.expense_backend.entities.User;
 import jakarta.persistence.*;
 import java.time.LocalDate;
@@ -18,6 +19,7 @@ public class Income {
 
     private String source;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

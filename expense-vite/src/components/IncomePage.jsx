@@ -1,78 +1,182 @@
-import React, { useState } from 'react';
-import tableStyles from './UsersTable.module.css';
+import React, { useEffect, useState } from "react";
+import tableStyles from "./UsersTable.module.css";
+
+import {
+  addIncome,
+  getMyIncomes,
+  updateIncome,
+  deleteIncome,
+} from "../services/IncomeServices"; // adjust path if needed
 
 function IncomePage() {
+  const [incomes, setIncomes] = useState([]);
+
   const [formData, setFormData] = useState({
-    detail: '',
-    category: '',
-    date: '',
-    amount: '',
-    description: ''
+    amount: "",
+    source: "",
+    date: "",
   });
 
+  const [editId, setEditId] = useState(null);
+
+  // ✅ Load incomes (IMPORTANT: replace userId with your logged-in user later)
+  const loadIncomes = async () => {
+    try {
+      const res = await getMyIncomes();
+      setIncomes([...res.data]); // force fresh reference
+    } catch (err) {
+      console.error("Error loading incomes:", err);
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      await loadIncomes();
+    })();
+  }, []);
+
+  // input handler
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  // submit (create or update)
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert('Income submitted');
-    setFormData({ detail: '', category: '', date: '', amount: '', description: '' });
+
+    try {
+      if (editId) {
+        await updateIncome(editId, formData);
+      } else {
+        await addIncome(formData);
+      }
+
+      setFormData({ amount: "", source: "", date: "" });
+      setEditId(null);
+
+      // 🔥 IMPORTANT: wait for reload
+      await loadIncomes();
+
+    } catch (err) {
+      console.error("Error saving income:", err);
+    }
+  };
+
+  // delete
+  const handleDelete = async (id) => {
+    try {
+      await deleteIncome(id);
+
+      // 🔥 wait for backend update
+      await loadIncomes();
+
+    } catch (err) {
+      console.error("Error deleting income:", err);
+    }
+  };
+
+  // edit
+  const handleEdit = (income) => {
+    setFormData({
+      amount: income.amount,
+      source: income.source,
+      date: income.date,
+    });
+    setEditId(income.id);
   };
 
   return (
     <div className={tableStyles.container}>
+      {/* TABLE */}
       <div className={tableStyles.panel}>
-        <h5 className={tableStyles.tableTitle}><b>All Income Details</b></h5>
+        <h5 className={tableStyles.tableTitle}>
+          <b>All Income Details</b>
+        </h5>
+
         <table className={tableStyles.table}>
           <thead>
             <tr>
-              <th>Income Detail</th>
-              <th>DATE</th>
-              <th>$ AMOUNT</th>
-              <th>EDIT</th>
-              <th>DELETE</th>
+              <th>Source</th>
+              <th>Date</th>
+              <th>Amount</th>
+              <th>Edit</th>
+              <th>Delete</th>
             </tr>
           </thead>
+
           <tbody>
-            <tr>
-              <td>Salary Credit</td>
-              <td>23-04-2025</td>
-              <td>Rs. 50,000</td>
-              <td>
-                <button className={tableStyles.editButton} title="Edit"><i className="fa fa-pencil"></i></button>
-              </td>
-              <td>
-                <button className={tableStyles.deleteButton} title="Delete"><i className="fa fa-trash"></i></button>
-              </td>
-            </tr>
+            {incomes.map((income) => (
+              <tr key={income.id}>
+                <td>{income.source}</td>
+                <td>{income.date}</td>
+                <td>Rs. {income.amount}</td>
+
+                <td>
+                  <button
+                    className={tableStyles.editButton}
+                    onClick={() => handleEdit(income)}
+                  >
+                    <i className="fa fa-pencil"></i>
+                  </button>
+                </td>
+
+                <td>
+                  <button
+                    className={tableStyles.deleteButton}
+                    onClick={() => handleDelete(income.id)}
+                  >
+                    <i className="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
 
+      {/* FORM */}
       <div className={tableStyles.panel}>
         <form onSubmit={handleSubmit}>
           <div className="w3-section">
-            <input className="w3-input w3-border w3-round-large" type="text" placeholder="Income Detail" name="detail" value={formData.detail} onChange={handleChange} />
+            <input
+              className="w3-input w3-border w3-round-large"
+              type="text"
+              placeholder="Income Source (Salary, Freelance, etc)"
+              name="source"
+              value={formData.source}
+              onChange={handleChange}
+            />
           </div>
+
           <div className="w3-section">
-            <input className="w3-input w3-border w3-round-large" type="text" placeholder="Category (Mostly Give a Drop Dwon)" name="category" value={formData.category} onChange={handleChange} />
+            <input
+              className="w3-input w3-border w3-round-large"
+              type="date"
+              name="date"
+              value={formData.date}
+              onChange={handleChange}
+            />
           </div>
+
           <div className="w3-section">
-            <div className="w3-row">
-              <div className="w3-col s12">
-                <input className="w3-input w3-border w3-round-large" type="date" placeholder="dd-mm-yyyy" name="date" value={formData.date} onChange={handleChange} />
-              </div>
-            </div>
+            <input
+              className="w3-input w3-border w3-round-large"
+              type="number"
+              placeholder="Amount (Rs)"
+              name="amount"
+              value={formData.amount}
+              onChange={handleChange}
+            />
           </div>
-          <div className="w3-section">
-            <input className="w3-input w3-border w3-round-large" type="number" placeholder="Amount (Rs)" name="amount" value={formData.amount} onChange={handleChange} />
-          </div>
-          <div className="w3-section">
-            <textarea className="w3-input w3-border w3-round-large" rows="4" placeholder="Income Description ( If Any )" name="description" value={formData.description} onChange={handleChange} />
-          </div>
-          <button type="submit" className="w3-button w3-blue w3-round-large" style={{ width: '100%' }}>Submit Income</button>
+
+          <button
+            type="submit"
+            className="w3-button w3-blue w3-round-large"
+            style={{ width: "100%" }}
+          >
+            {editId ? "Update Income" : "Submit Income"}
+          </button>
         </form>
       </div>
     </div>
@@ -80,5 +184,3 @@ function IncomePage() {
 }
 
 export default IncomePage;
-
-

@@ -29,8 +29,8 @@ public class IncomeService {
         return incomeRepository.save(income);
     }
 
-    public List<Income> getUserIncomes(int userId) {
-        return incomeRepository.findByUserId(userId);
+    public List<Income> getUserIncomes(User user) {
+        return incomeRepository.findByUser(user);
     }
 
     public Income updateIncome(int incomeId, Income updatedIncome) {

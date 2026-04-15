@@ -10,6 +10,5 @@ public interface IncomeRepository extends JpaRepository<Income, Integer> {
 
     List<Income> findByUser(User user);
 
-    List<Income> findByUserId(int userId);
 
 }
