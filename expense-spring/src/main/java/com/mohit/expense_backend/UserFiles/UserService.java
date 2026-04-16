@@ -1,10 +1,8 @@
-package com.mohit.expense_backend.services;
+package com.mohit.expense_backend.UserFiles;
 
 
 import com.mohit.expense_backend.dto.UserRequestDTO;
 import com.mohit.expense_backend.dto.UserResponseDTO;
-import com.mohit.expense_backend.entities.User;
-import com.mohit.expense_backend.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;

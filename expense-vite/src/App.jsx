@@ -5,9 +5,10 @@ import Header from './components/Header';
 import UsersTable from './components/UsersTable';
 import UserEditModal from './components/UserEditModal';
 import UsersSortModal from './components/UsersSortModal';
-import HomeDashboard from './components/HomeDashboard';
+import HomeDashboard from './components/UnusedFiles/HomeDashboard';
 import IncomePage from './components/IncomePage';
 import AuthPage from './components/AuthPage';
+import ExpensePage from './components/ExpensePage';
 import { getCurrentUser } from './services/UserServices';  // Import the API call
 import { logoutUser } from './services/UserServices';  // Ensure correct import
 
@@ -74,26 +75,33 @@ function App() {
   };
 
   const renderCurrentPage = () => {
-    switch (currentPage) {
-      case 'auth':
-        return <AuthPage onNavigateTo={handleNavigation} />;
-      case 'dashboard':
-        return <HomeDashboard />;
-      case 'users':
-        return (
-          <UsersTable
-            key={tableKey}
-            openEditModal={openEditModal}
-            openSortModal={openSortModal}
-            sortColumn={sortColumn}  // Pass current sorting column to UsersTable
-          />
-        );
-      case 'income':
-        return <IncomePage />;
-      default:
-        return <HomeDashboard />;
-    }
-  };
+  switch (currentPage) {
+    case 'auth':
+      return <AuthPage onNavigateTo={handleNavigation} />;
+
+    case 'dashboard':
+      return <HomeDashboard />;
+
+    case 'users':
+      return (
+        <UsersTable
+          key={tableKey}
+          openEditModal={openEditModal}
+          openSortModal={openSortModal}
+          sortColumn={sortColumn}
+        />
+      );
+
+    case 'income':
+      return <IncomePage />;
+
+    case 'expense':   // ⭐ ADD THIS BLOCK
+      return <ExpensePage />;
+
+    default:
+      return <HomeDashboard />;
+  }
+};
 
   return (
     <div className="w3-light-grey">

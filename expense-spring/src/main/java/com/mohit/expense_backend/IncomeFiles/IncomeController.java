@@ -1,7 +1,8 @@
-package com.mohit.expense_backend.IncomeStuffDeleteLATER;
+package com.mohit.expense_backend.IncomeFiles;
 
 import com.mohit.expense_backend.Security.UserPrincipal;
-import com.mohit.expense_backend.entities.User;
+import com.mohit.expense_backend.UserFiles.User;
+import com.mohit.expense_backend.dto.IncomeRequestDTO;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 

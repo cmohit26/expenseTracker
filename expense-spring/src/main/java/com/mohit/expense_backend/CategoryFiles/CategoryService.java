@@ -1,4 +1,4 @@
-package com.mohit.expense_backend.unusedFfiles;
+package com.mohit.expense_backend.CategoryFiles;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,10 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public Category addCategory(Category category) {
+    public Category createCategory(Category category) {
+        if (categoryRepository.existsByName(category.getName())) {
+            throw new RuntimeException("Category already exists");
+        }
         return categoryRepository.save(category);
     }
 
@@ -24,11 +27,14 @@ public class CategoryService {
                 .orElseThrow(() -> new RuntimeException("Category not found"));
     }
 
-    public Category findByName(String name) {
-        return categoryRepository.findByName(name);
+    public Category updateCategory(Integer id, Category category) {
+        Category existing = getCategoryById(id);
+        existing.setName(category.getName());
+        return categoryRepository.save(existing);
     }
 
     public void deleteCategory(Integer id) {
-        categoryRepository.deleteById(id);
+        Category existing = getCategoryById(id);
+        categoryRepository.delete(existing);
     }
 }

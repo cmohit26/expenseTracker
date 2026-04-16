@@ -1,7 +1,6 @@
-package com.mohit.expense_backend.IncomeStuffDeleteLATER;
+package com.mohit.expense_backend.IncomeFiles;
 
-import com.mohit.expense_backend.IncomeStuffDeleteLATER.Income;
-import com.mohit.expense_backend.entities.User;
+import com.mohit.expense_backend.UserFiles.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

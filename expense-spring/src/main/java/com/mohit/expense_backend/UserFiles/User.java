@@ -1,4 +1,4 @@
-package com.mohit.expense_backend.entities;
+package com.mohit.expense_backend.UserFiles;
 
 import jakarta.persistence.*;
 

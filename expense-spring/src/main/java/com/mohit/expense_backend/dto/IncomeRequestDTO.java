@@ -1,4 +1,4 @@
-package com.mohit.expense_backend.IncomeStuffDeleteLATER;
+package com.mohit.expense_backend.dto;
 
 public class IncomeRequestDTO {
     private Double amount;

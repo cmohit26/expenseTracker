@@ -1,4 +1,4 @@
-package com.mohit.expense_backend.archives;
+package com.mohit.expense_backend.archives.seeders;
 
 
 import com.mohit.expense_backend.ExpenseBackendApplication;

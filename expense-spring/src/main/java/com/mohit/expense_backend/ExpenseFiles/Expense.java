@@ -1,5 +1,7 @@
-package com.mohit.expense_backend.entities;
+package com.mohit.expense_backend.ExpenseFiles;
 
+import com.mohit.expense_backend.UserFiles.User;
+import com.mohit.expense_backend.CategoryFiles.Category;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,11 +23,18 @@ public class Expense {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
     private Double amount;
 
-    private Date date;
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
-    private String description;
+    @Temporal(TemporalType.DATE)
+    private Date date;
 
     public Integer getId() {
         return id;
@@ -43,6 +52,14 @@ public class Expense {
         this.user = user;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public Double getAmount() {
         return amount;
     }
@@ -51,19 +68,19 @@ public class Expense {
         this.amount = amount;
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
     public Date getDate() {
         return date;
     }
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 }

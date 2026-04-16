@@ -1,7 +1,7 @@
 package com.mohit.expense_backend.Security;
 
-import com.mohit.expense_backend.entities.User;
-import com.mohit.expense_backend.repository.UserRepository;
+import com.mohit.expense_backend.UserFiles.User;
+import com.mohit.expense_backend.UserFiles.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -8,7 +8,7 @@ const HomeDashboard = () => {
       {/* Page Title */}
       <div className={styles.pageHeader}>
         <h2></h2>
-        <h2>Index Page (Preview of the WEBSITE)</h2>
+        <h2>Index Page (STILL AT INDEX PAGE... Preview of the WEBSITE)</h2>
         <h2></h2>
       </div>
 

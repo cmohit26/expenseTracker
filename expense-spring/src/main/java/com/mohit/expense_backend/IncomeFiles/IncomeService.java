@@ -1,7 +1,8 @@
-package com.mohit.expense_backend.IncomeStuffDeleteLATER;
+package com.mohit.expense_backend.IncomeFiles;
 
-import com.mohit.expense_backend.entities.User;
-import com.mohit.expense_backend.repository.UserRepository;
+import com.mohit.expense_backend.UserFiles.User;
+import com.mohit.expense_backend.UserFiles.UserRepository;
+import com.mohit.expense_backend.dto.IncomeRequestDTO;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

@@ -60,13 +60,6 @@ const Sidebar = ({currentUser, onNavigate, currentPage}) => {
           </a>
           <a 
             href="#" 
-            className={`w3-bar-item w3-button w3-padding ${currentPage === 'dashboard' ? 'w3-blue' : ''}`}
-            onClick={() => handleNavigation('dashboard')}
-          >
-            <i className="fa fa-home fa-fw"></i> Index
-          </a>
-          <a 
-            href="#" 
             className={`w3-bar-item w3-button w3-padding ${currentPage === 'users' ? 'w3-blue' : ''}`}
             onClick={() => handleNavigation('users')}
           >
@@ -77,7 +70,14 @@ const Sidebar = ({currentUser, onNavigate, currentPage}) => {
             className={`w3-bar-item w3-button w3-padding ${currentPage === 'income' ? 'w3-blue' : ''}`}
             onClick={() => handleNavigation('income')}
           >
-            <i className="fa fa-money"></i> Income
+            <i className="fa-solid fa-dollar-sign"></i> Income
+          </a>
+          <a 
+            href="#" 
+            className={`w3-bar-item w3-button w3-padding ${currentPage === 'expense' ? 'w3-blue' : ''}`}
+            onClick={() => handleNavigation('expense')}
+          >
+            <i className="fa fa-credit-card"></i> Expense Report
           </a>
         </div>
       </nav>
