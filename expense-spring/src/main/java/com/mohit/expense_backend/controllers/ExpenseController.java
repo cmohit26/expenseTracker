@@ -1,10 +1,7 @@
-package com.mohit.expense_backend.ExpenseFiles;
-import com.mohit.expense_backend.ExpenseFiles.Expense;
-import com.mohit.expense_backend.ExpenseFiles.ExpenseService;
+package com.mohit.expense_backend.controllers;
+import com.mohit.expense_backend.Entities.Expense;
+import com.mohit.expense_backend.Services.ExpenseService;
 import com.mohit.expense_backend.dto.ExpenseDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

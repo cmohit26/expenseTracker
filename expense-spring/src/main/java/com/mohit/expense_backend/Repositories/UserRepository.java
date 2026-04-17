@@ -1,6 +1,6 @@
-package com.mohit.expense_backend.UserFiles;
+package com.mohit.expense_backend.Repositories;
 
-import com.mohit.expense_backend.UserFiles.User;
+import com.mohit.expense_backend.Entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

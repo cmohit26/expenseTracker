@@ -1,7 +1,7 @@
 package com.mohit.expense_backend.controllers;
 
-import com.mohit.expense_backend.UserFiles.User;
-import com.mohit.expense_backend.UserFiles.UserRepository;
+import com.mohit.expense_backend.Entities.User;
+import com.mohit.expense_backend.Repositories.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

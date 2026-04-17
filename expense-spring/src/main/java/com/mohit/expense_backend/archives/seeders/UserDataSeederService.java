@@ -1,7 +1,7 @@
 package com.mohit.expense_backend.archives.seeders;
 
-import com.mohit.expense_backend.UserFiles.User;
-import com.mohit.expense_backend.UserFiles.UserRepository;
+import com.mohit.expense_backend.Entities.User;
+import com.mohit.expense_backend.Repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

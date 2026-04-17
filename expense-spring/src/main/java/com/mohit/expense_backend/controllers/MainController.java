@@ -1,6 +1,6 @@
 package com.mohit.expense_backend.controllers;
 
-import com.mohit.expense_backend.UserFiles.User;
+import com.mohit.expense_backend.Entities.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

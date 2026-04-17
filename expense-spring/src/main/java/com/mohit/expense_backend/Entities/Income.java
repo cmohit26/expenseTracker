@@ -1,7 +1,6 @@
-package com.mohit.expense_backend.IncomeFiles;
+package com.mohit.expense_backend.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mohit.expense_backend.UserFiles.User;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 

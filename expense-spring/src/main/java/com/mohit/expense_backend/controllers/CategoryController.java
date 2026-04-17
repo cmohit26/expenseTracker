@@ -1,5 +1,7 @@
-package com.mohit.expense_backend.CategoryFiles;
+package com.mohit.expense_backend.controllers;
 
+import com.mohit.expense_backend.Entities.Category;
+import com.mohit.expense_backend.Services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

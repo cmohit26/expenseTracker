@@ -1,4 +1,4 @@
-package com.mohit.expense_backend.CategoryFiles;
+package com.mohit.expense_backend.Entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

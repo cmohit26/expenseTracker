@@ -1,7 +1,5 @@
-package com.mohit.expense_backend.ExpenseFiles;
+package com.mohit.expense_backend.Entities;
 
-import com.mohit.expense_backend.UserFiles.User;
-import com.mohit.expense_backend.CategoryFiles.Category;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

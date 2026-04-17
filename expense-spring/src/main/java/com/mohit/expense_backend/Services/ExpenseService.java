@@ -1,11 +1,13 @@
-package com.mohit.expense_backend.ExpenseFiles;
+package com.mohit.expense_backend.Services;
 
+import com.mohit.expense_backend.Entities.Expense;
+import com.mohit.expense_backend.Repositories.ExpenseRepository;
 import com.mohit.expense_backend.Security.UserPrincipal;
 import com.mohit.expense_backend.dto.ExpenseDTO;
-import com.mohit.expense_backend.CategoryFiles.Category;
-import com.mohit.expense_backend.CategoryFiles.CategoryRepository;
-import com.mohit.expense_backend.UserFiles.User;
-import com.mohit.expense_backend.UserFiles.UserRepository;
+import com.mohit.expense_backend.Entities.Category;
+import com.mohit.expense_backend.Repositories.CategoryRepository;
+import com.mohit.expense_backend.Entities.User;
+import com.mohit.expense_backend.Repositories.UserRepository;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -38,7 +40,7 @@ public class ExpenseService {
         expense.setAmount(dto.getAmount());
         expense.setDate(dto.getDate());
         expense.setCategory(category);
-        expense.setUser(user); // ✅ LOGGED-IN USER
+        expense.setUser(user);
 
         return expenseRepository.save(expense);
     }

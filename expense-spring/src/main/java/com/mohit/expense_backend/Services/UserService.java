@@ -1,6 +1,8 @@
-package com.mohit.expense_backend.UserFiles;
+package com.mohit.expense_backend.Services;
 
 
+import com.mohit.expense_backend.Entities.User;
+import com.mohit.expense_backend.Repositories.UserRepository;
 import com.mohit.expense_backend.dto.UserRequestDTO;
 import com.mohit.expense_backend.dto.UserResponseDTO;
 import lombok.extern.slf4j.Slf4j;

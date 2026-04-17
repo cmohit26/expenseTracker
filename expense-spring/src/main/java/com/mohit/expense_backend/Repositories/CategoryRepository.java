@@ -1,5 +1,6 @@
-package com.mohit.expense_backend.CategoryFiles;
+package com.mohit.expense_backend.Repositories;
 
+import com.mohit.expense_backend.Entities.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,11 +1,11 @@
-package com.mohit.expense_backend.UserFiles;
+package com.mohit.expense_backend.controllers;
 
+import com.mohit.expense_backend.Entities.User;
 import com.mohit.expense_backend.Security.UserPrincipal;
+import com.mohit.expense_backend.Repositories.UserRepository;
 import com.mohit.expense_backend.dto.UserRequestDTO;
 import com.mohit.expense_backend.dto.UserResponseDTO;
-import com.mohit.expense_backend.UserFiles.User;
-import com.mohit.expense_backend.UserFiles.UserRepository;
-import com.mohit.expense_backend.UserFiles.UserService;
+import com.mohit.expense_backend.Services.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

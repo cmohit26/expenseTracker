@@ -1,7 +1,9 @@
-package com.mohit.expense_backend.IncomeFiles;
+package com.mohit.expense_backend.Services;
 
-import com.mohit.expense_backend.UserFiles.User;
-import com.mohit.expense_backend.UserFiles.UserRepository;
+import com.mohit.expense_backend.Entities.Income;
+import com.mohit.expense_backend.Repositories.IncomeRepository;
+import com.mohit.expense_backend.Entities.User;
+import com.mohit.expense_backend.Repositories.UserRepository;
 import com.mohit.expense_backend.dto.IncomeRequestDTO;
 import org.springframework.stereotype.Service;
 

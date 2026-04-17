@@ -1,6 +1,6 @@
 package com.mohit.expense_backend.Security;
 
-import com.mohit.expense_backend.UserFiles.User;
+import com.mohit.expense_backend.Entities.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
