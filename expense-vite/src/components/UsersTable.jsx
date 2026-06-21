@@ -117,39 +117,54 @@ const UsersTable = ({ openEditModal, openSortModal, sortColumn }) => {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user, index) => (
-                  <tr key={user.id}>
-                    <td>{user.id}</td>
-                    <td>{index + 1}</td>
-                    <td>{user.firstName}</td>
-                    <td>{user.lastName}</td>
-                    <td>{user.dateOfBirth}</td>
-                    <td>{user.age}</td>
-                    <td>{user.roles}</td>
-                    <td>{user.email}</td>
-                    <td>
-                      <button
-                        onClick={() => handleEditClick(user.id)}
-                        className={styles.editButton}
-                        title="Edit User"
-                      >
-                        <i className="fas fa-edit"></i>
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        onClick={() =>
-                          handleDeleteClick(user.id, `${user.firstName} ${user.lastName}`)
-                        }
-                        className={styles.deleteButton}
-                        title="Delete User"
-                      >
-                        <i className="fas fa-trash"></i>
-                      </button>
-                    </td>
+                {users.length > 0 ? (  
+                  users.map((user, index) => (
+                    <tr key={user.id}>
+                      <td>{user.id}</td>
+                      <td>{index + 1}</td>
+                      <td>{user.firstName}</td>
+                      <td>{user.lastName}</td>
+                      <td>{user.dateOfBirth}</td>
+                      <td>{user.age}</td>
+                      <td>{user.roles}</td>
+                      <td>{user.email}</td>
+                      <td>
+                        <button
+                          onClick={() => handleEditClick(user.id)}
+                          className={styles.editButton}
+                          title="Edit User"
+                        >
+                          <i className="fas fa-edit"></i>
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          onClick={() =>
+                            handleDeleteClick(user.id, `${user.firstName} ${user.lastName}`)
+                          }
+                          className={styles.deleteButton}
+                          title="Delete User"
+                        >
+                          <i className="fas fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td> --- </td>
+                    <td> --- </td>
+                    <td> --- </td>
+                    <td> --- </td>
+                    <td> NOT LOGGED IN </td>
+                    <td> --- </td>
+                    <td> --- </td>
+                    <td> --- </td>
+                    <td> --- </td>
+                    <td> --- </td>
                   </tr>
-                ))}
-              </tbody>
+                )}
+            </tbody>
             </table>
 
           </div>

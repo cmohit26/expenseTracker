@@ -58,6 +58,15 @@ const Sidebar = ({currentUser, onNavigate, currentPage}) => {
           <a href="#" className="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onClick={w3_close} title="close menu">
             <i className="fa fa-remove fa-fw"></i> Close Menu
           </a>
+                  
+          <a
+            href="#"
+            className={`w3-bar-item w3-button w3-padding ${ currentPage === 'dashboard' ? 'w3-blue' : ''}`}
+            onClick={() => handleNavigation('dashboard')}
+          >
+            <i className="fa-solid fa-chart-line"></i> User Dashboard
+          </a>
+
           <a 
             href="#" 
             className={`w3-bar-item w3-button w3-padding ${currentPage === 'users' ? 'w3-blue' : ''}`}
@@ -65,20 +74,23 @@ const Sidebar = ({currentUser, onNavigate, currentPage}) => {
           >
             <i className="fa fa-lock"></i> ADMIN Information
           </a>
+          
           <a 
             href="#" 
             className={`w3-bar-item w3-button w3-padding ${currentPage === 'income' ? 'w3-blue' : ''}`}
             onClick={() => handleNavigation('income')}
           >
-            <i className="fa-solid fa-dollar-sign"></i> Income
+            <i className="fa-solid fa-dollar-sign"></i>  Income
           </a>
+          
           <a 
             href="#" 
             className={`w3-bar-item w3-button w3-padding ${currentPage === 'expense' ? 'w3-blue' : ''}`}
             onClick={() => handleNavigation('expense')}
           >
-            <i className="fa fa-credit-card"></i> Expense Report
+            <i className="fa fa-credit-card"></i> Expenses
           </a>
+        
         </div>
       </nav>
     </>

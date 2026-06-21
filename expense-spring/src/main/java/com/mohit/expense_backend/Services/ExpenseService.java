@@ -12,6 +12,7 @@ import com.mohit.expense_backend.Repositories.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -38,7 +39,7 @@ public class ExpenseService {
         Expense expense = new Expense();
         expense.setTitle(dto.getTitle());
         expense.setAmount(dto.getAmount());
-        expense.setDate(dto.getDate());
+        expense.setDate(LocalDate.parse(dto.getDate()));
         expense.setCategory(category);
         expense.setUser(user);
 

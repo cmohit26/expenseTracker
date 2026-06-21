@@ -175,7 +175,12 @@ const ExpensePage = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="6">No expenses found</td>
+                <td> --- </td>
+                <td> --- </td>
+                <td> --- </td>
+                <td> --- </td>
+                <td> --- </td>
+                <td> --- </td>
               </tr>
             )}
           </tbody>
@@ -202,6 +207,7 @@ const ExpensePage = () => {
             placeholder="Amount"
             value={formData.amount}
             onChange={handleChange}
+            step={100}
             required
           />
 

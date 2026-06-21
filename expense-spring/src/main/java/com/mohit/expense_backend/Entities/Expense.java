@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -32,7 +33,7 @@ public class Expense {
     private Category category;
 
     @Temporal(TemporalType.DATE)
-    private Date date;
+    private LocalDate date;
 
     public Integer getId() {
         return id;
@@ -74,11 +75,7 @@ public class Expense {
         this.category = category;
     }
 
-    public Date getDate() {
-        return date;
-    }
+    public LocalDate getDate() { return date; }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
+    public void setDate(LocalDate date) { this.date = date; }
 }

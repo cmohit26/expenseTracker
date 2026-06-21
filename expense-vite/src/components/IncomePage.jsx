@@ -106,31 +106,39 @@ function IncomePage() {
           </thead>
 
           <tbody>
-            {incomes.map((income) => (
-              <tr key={income.id}>
-                <td>{income.source}</td>
-                <td>{income.date}</td>
-                <td>Rs. {income.amount}</td>
-
-                <td>
-                  <button
-                    className={tableStyles.editButton}
-                    onClick={() => handleEdit(income)}
-                  >
-                    <i className="fa fa-pencil"></i>
-                  </button>
-                </td>
-
-                <td>
-                  <button
-                    className={tableStyles.deleteButton}
-                    onClick={() => handleDelete(income.id)}
-                  >
-                    <i className="fa fa-trash"></i>
-                  </button>
-                </td>
+            {incomes.length > 0 ? (
+              incomes.map((income) => (
+                <tr key={income.id}>
+                  <td>{income.source}</td>
+                  <td>{income.date}</td>
+                  <td>Rs. {income.amount}</td>
+                  <td>
+                    <button
+                      className={tableStyles.editButton}
+                      onClick={() => handleEdit(income)}
+                    >
+                      <i className="fa fa-pencil"></i>
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      className={tableStyles.deleteButton}
+                      onClick={() => handleDelete(income.id)}
+                    >
+                      <i className="fa fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td> --- </td>
+                <td> --- </td>
+                <td> --- </td>
+                <td> --- </td>
+                <td> --- </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

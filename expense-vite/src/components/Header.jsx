@@ -7,7 +7,7 @@ import styles from './Header.module.css';
 // - onMenuClick: () => void - toggles the sidebar on small screens
 // - onLoginClick: () => void - navigates to login/auth page
 // - onLogoutClick: () => Promise<void> | void - triggers logout flow
-function Header({ currentUser, onMenuClick, onLoginClick, onLogoutClick }){
+function Header({ currentUser, onMenuClick, onLoginClick, onLogoutClick, onNavigate}){
   return (
     <div className={styles.topBar}>
       <button
@@ -19,7 +19,15 @@ function Header({ currentUser, onMenuClick, onLoginClick, onLogoutClick }){
         <span className={styles.menuLabel}>Menu</span>
       </button>
 
-      <div className={`${styles.barItem} ${styles.titleLeft}`}>
+      {/* <div className={`${styles.barItem} ${styles.titleLeft}`}>
+        <span className={styles.appTitle}>Expense Tracker</span>
+      </div> */}
+
+      <div
+        className={`${styles.barItem} ${styles.titleLeft}`}
+        onClick={() => onNavigate('dashboard')}
+        style={{ cursor: 'pointer' }}
+      >
         <span className={styles.appTitle}>Expense Tracker</span>
       </div>
 

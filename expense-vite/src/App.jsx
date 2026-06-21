@@ -5,7 +5,7 @@ import Header from './components/Header';
 import UsersTable from './components/UsersTable';
 import UserEditModal from './components/UserEditModal';
 import UsersSortModal from './components/UsersSortModal';
-import HomeDashboard from './components/UnusedFiles/HomeDashboard';
+import DashboardPage from './components/DashboardPage.jsx';
 import IncomePage from './components/IncomePage';
 import AuthPage from './components/AuthPage';
 import ExpensePage from './components/ExpensePage';
@@ -79,8 +79,8 @@ function App() {
     case 'auth':
       return <AuthPage onNavigateTo={handleNavigation} />;
 
-    case 'dashboard':
-      return <HomeDashboard />;
+    case "dashboard":
+      return <DashboardPage onNavigate={handleNavigation} />;
 
     case 'users':
       return (
@@ -99,7 +99,7 @@ function App() {
       return <ExpensePage />;
 
     default:
-      return <HomeDashboard />;
+      return <DashboardPage />
   }
 };
 
@@ -110,6 +110,7 @@ function App() {
         currentUser={currentUser}
         onMenuClick={() => (document.getElementById('mySidebar').style.display = 'block')}
         onLoginClick={() => handleNavigation('auth')}
+        onNavigate={handleNavigation}
         onLogoutClick={async () => {
           try {
             await logoutUser();

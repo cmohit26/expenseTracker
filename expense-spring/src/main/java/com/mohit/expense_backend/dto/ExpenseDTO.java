@@ -8,7 +8,7 @@ public class ExpenseDTO {
     private Double amount;
     private Integer categoryId;
     private Integer userId;
-    private Date date;
+    private String date;
 
     public String getTitle() {
         return title;
@@ -42,11 +42,11 @@ public class ExpenseDTO {
         this.userId = userId;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }

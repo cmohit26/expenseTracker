@@ -4,7 +4,9 @@ const REST_API_EXPENSE_URL = "http://localhost:8080/v1/expense";
 
 // Create a new expense
 export const createExpense = (expenseData) =>
-  axios.post(REST_API_EXPENSE_URL, expenseData);
+  axios.post( REST_API_EXPENSE_URL, expenseData , {
+    withCredentials: true
+  });
 
 // Get all expenses of a specific user
 export const getExpensesByUser = (userId) =>
@@ -35,8 +37,12 @@ export const getExpenseById = (id) =>
 
 // Update an expense
 export const updateExpense = (id, expenseData) =>
-  axios.put(`${REST_API_EXPENSE_URL}/${id}`, expenseData);
+  axios.put(`${REST_API_EXPENSE_URL}/${id}`, expenseData, {
+    withCredentials: true
+  });
 
 // Delete an expense
 export const deleteExpense = (id) =>
-  axios.delete(`${REST_API_EXPENSE_URL}/${id}`);
+  axios.delete(`${REST_API_EXPENSE_URL}/${id}`, {
+    withCredentials: true
+  });
