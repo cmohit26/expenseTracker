@@ -43,6 +43,7 @@ public class SecurityConfig {
                         .requestMatchers("/v1/users/**").authenticated()
                         .requestMatchers("/v1/expense/**").authenticated()
                         .requestMatchers("/v1/dashboard/**").authenticated()
+                        .requestMatchers("/v1/category/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form

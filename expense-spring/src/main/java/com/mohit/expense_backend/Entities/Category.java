@@ -1,9 +1,6 @@
 package com.mohit.expense_backend.Entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 
 @Entity
@@ -13,8 +10,30 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
+
+    private boolean globalCategory;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public boolean isGlobalCategory() {
+        return globalCategory;
+    }
+
+    public void setGlobalCategory(boolean globalCategory) {
+        this.globalCategory = globalCategory;
+    }
 
     public Integer getId() {
         return id;

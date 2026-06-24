@@ -23,14 +23,22 @@ public class CategoryController {
         return categoryService.createCategory(category);
     }
 
-    @GetMapping
-    public List<Category> getAllCategories() {
-        return categoryService.getAllCategories();
+    // ================= USER PAGE =================
+    @GetMapping("/user")
+    public List<Category> getUserCategories() {
+        return categoryService.getUserCategories();
     }
 
-    @GetMapping("/{id}")
-    public Category getCategoryById(@PathVariable Integer id) {
-        return categoryService.getCategoryById(id);
+    // ================= ADMIN PAGE =================
+    @GetMapping("/global")
+    public List<Category> getGlobalCategories() {
+        return categoryService.getGlobalCategories();
+    }
+
+    // ================= EXPENSE PAGE =================
+    @GetMapping("/available")
+    public List<Category> getAvailableCategories() {
+        return categoryService.getAvailableCategories();
     }
 
     @PutMapping("/{id}")

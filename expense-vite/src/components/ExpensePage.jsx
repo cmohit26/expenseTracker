@@ -3,7 +3,7 @@ import styles from "./ExpensePage.module.css";
 
 // CATEGORY APIs
 import {
-  getAllCategories,
+  getAvailableCategories,
   createCategory
 } from "../services/CategoryService";
 
@@ -31,7 +31,8 @@ const ExpensePage = () => {
   const [categories, setCategories] = useState([]);
 
   const [categoryData, setCategoryData] = useState({
-    name: ""
+    name: "",
+    globalCategory:false
   });
 
   // ================= FETCH DATA =================
@@ -41,7 +42,7 @@ const ExpensePage = () => {
   }, []);
 
   const fetchCategories = () => {
-    getAllCategories()
+    getAvailableCategories()
       .then((res) => {
         setCategories(res.data);
       })
@@ -53,13 +54,20 @@ const ExpensePage = () => {
   const fetchRecentExpenses = () => {
     getRecentExpenses()
       .then((res) => {
+        console.table(
+          res.data.map(e => ({
+            id: e.id,
+            title: e.title,
+            date: e.date
+          }))
+        );
         setExpenses(res.data);
       })
       .catch((err) => {
         console.error("Error fetching expenses:", err);
       });
-  };
-
+    };
+    
   // ================= EXPENSE HANDLERS =================
   const handleChange = (e) => {
     setFormData({
@@ -110,6 +118,7 @@ const ExpensePage = () => {
     }
   };
 
+
   // ================= CATEGORY HANDLERS =================
   const handleCategoryChange = (e) => {
     setCategoryData({
@@ -121,13 +130,27 @@ const ExpensePage = () => {
   const handleAddCategory = (e) => {
     e.preventDefault();
 
-    createCategory(categoryData)
-      .then(() => {
+
+    const payload = {
+      name: categoryData.name,
+      globalCategory:false
+    };
+
+
+    createCategory(payload)
+      .then(()=>{
         fetchCategories();
-        setCategoryData({ name: "" });
+
+        setCategoryData({
+          name:"",
+          globalCategory:false
+        });
       })
-      .catch((err) => {
-        console.error("Error adding category:", err);
+      .catch((err)=>{
+        console.error(
+          "Error adding category:",
+          err
+        );
       });
   };
 
@@ -161,7 +184,15 @@ const ExpensePage = () => {
                   <td>{exp.title}</td>
                   <td>₹ {Number(exp.amount).toLocaleString()}</td>
                   <td>{exp.category?.name || exp.category}</td>
-                  <td>{exp.date?.substring(0, 10)}</td>
+                  {/* <td>{exp.date?.substring(0, 10)}</td> */}
+                  <td>
+                    {new Intl.DateTimeFormat("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                      timeZone: "UTC",
+                    }).format(new Date(exp.date))}
+                  </td>
                   <td>
                     <button
                       onClick={() => handleExpenseDeleteClick(exp.id)}
@@ -218,12 +249,18 @@ const ExpensePage = () => {
             onChange={handleChange}
             required
           >
-            <option value="">Select Category</option>
-            {categories.map((cat) => (
-              <option key={cat.id} value={cat.id}>
+          <option value="">
+            Select Category
+          </option>
+          { categories.map((cat) => (
+              <option
+                key={cat.id}
+                value={cat.id}
+              >
                 {cat.name}
               </option>
-            ))}
+            ))
+          }
           </select>
 
           <input
@@ -240,7 +277,7 @@ const ExpensePage = () => {
 
       {/* ================= CATEGORY FORM ================= */}
       <div className={styles.formContainer}>
-        <h3>Add New Category</h3>
+        <h3>Add A Personal Category</h3>
         <form onSubmit={handleAddCategory} className={styles.form}>
 
           <input

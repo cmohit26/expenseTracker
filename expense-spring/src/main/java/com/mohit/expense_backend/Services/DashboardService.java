@@ -13,10 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,56 +77,62 @@ public class DashboardService {
 
         //FOR THE MONTHLY CHART (Monthly Expense)
         List<Expense> expenses = expenseRepository.findByUserId(userId);
-        Map<Month, Double> monthTotals =
-                expenses.stream()
-                        .collect(Collectors.groupingBy(
-                                e -> e.getDate().getMonth(),
-                                Collectors.summingDouble(
-                                        Expense::getAmount
-                                )
-                        ));
-        List<MonthlyExpenseDTO> monthlyExpenses =
-                Arrays.stream(Month.values())
-                        .map(month ->
-                                new MonthlyExpenseDTO(
-                                        month.name().substring(0,3),
-                                        monthTotals.getOrDefault(month,0.0)
-                                ))
-                        .collect(Collectors.toList());
+        Map<Month, Double> monthTotals = new HashMap<>();
+            for (Expense expense : expenses) {
+                Month month = expense.getDate().getMonth();
+                Double currentTotal = monthTotals.get(month);
+                if (currentTotal == null) {
+                    currentTotal = 0.0;
+                }
+                monthTotals.put(month, currentTotal + expense.getAmount());
+            }
+        List<MonthlyExpenseDTO> monthlyExpenses = new ArrayList<>();
+            for (Month month : Month.values()) {
+                String monthName = month.name().substring(0, 3);
+                Double total = monthTotals.get(month);
+                if (total == null) {
+                    total = 0.0;
+                }
+                monthlyExpenses.add(
+                        new MonthlyExpenseDTO(monthName, total)
+                );
+            }
         dto.setMonthlyExpenses(monthlyExpenses);
 
         //FOR THE MONTHLY CHART (Monthly Expense)
-        List<YearlyExpenseDTO> yearlyExpenses =
-                expenses.stream()
-                        .collect(Collectors.groupingBy(
-                                e -> e.getDate().getYear(),
-                                Collectors.groupingBy(
-                                        e -> e.getDate().getMonth(),
-                                        Collectors.summingDouble(Expense::getAmount)
+        Map<Integer, Map<Month, Double>> yearlyMap = new HashMap<>();
+            for (Expense expense : expenses) {
+                int year = expense.getDate().getYear();
+                Month month = expense.getDate().getMonth();
+                double amount = expense.getAmount();
+                Map<Month, Double> monthMap = yearlyMap.get(year);
+                if (monthMap == null) {
+                    monthMap = new HashMap<>();
+                    yearlyMap.put(year, monthMap);
+                }
+                double current = monthMap.getOrDefault(month, 0.0);
+                monthMap.put(month, current + amount);
+            }
+        List<YearlyExpenseDTO> yearlyExpenses = new ArrayList<>();
+            for (Map.Entry<Integer, Map<Month, Double>> yearEntry : yearlyMap.entrySet()) {
+                YearlyExpenseDTO yearlyDto = new YearlyExpenseDTO();
+                yearlyDto.setYear(yearEntry.getKey());
+                List<MonthlyExpenseDTO> months = new ArrayList<>();
+                // keeping month order consistent (JAN–DEC)
+                for (Month month : Month.values()) {
+                    Double total = yearEntry.getValue().get(month);
+                    if (total != null) {
+                        months.add(
+                                new MonthlyExpenseDTO(
+                                        month.name().substring(0, 3),
+                                        total
                                 )
-                        ))
-                        .entrySet()
-                        .stream()
-                        .map(yearEntry -> {
-                            YearlyExpenseDTO yearlyDto = new YearlyExpenseDTO();
-                            yearlyDto.setYear(yearEntry.getKey());
-                            List<MonthlyExpenseDTO> months =
-                                    yearEntry.getValue()
-                                            .entrySet()
-                                            .stream()
-                                            .map(monthEntry ->
-                                                    new MonthlyExpenseDTO(
-                                                            monthEntry.getKey()
-                                                                    .name()
-                                                                    .substring(0, 3),
-                                                            monthEntry.getValue()
-                                                    )
-                                            )
-                                            .toList();
-                            yearlyDto.setMonths(months);
-                            return yearlyDto;
-                        })
-                        .toList();
+                        );
+                    }
+                }
+                yearlyDto.setMonths(months);
+                yearlyExpenses.add(yearlyDto);
+            }
         dto.setYearlyExpenses(yearlyExpenses);
 
         return dto;
