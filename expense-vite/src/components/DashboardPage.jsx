@@ -161,10 +161,10 @@ function DashboardPage({ onNavigate }) {
           <span>Total Income</span>
            <h3>{dashboard?.totalIncome ?? "---"}</h3>
         </div>
-        <div className={`${styles.card} ${styles.greenCard}`}>
+        {/* <div className={`${styles.card} ${styles.greenCard}`}>
           <span>Categories</span>
           <h3>{dashboard?.totalCategories ?? "---"}</h3>
-        </div>
+        </div> */}
       </div>
 
       {/* Summary Cards (ROW 2) */}

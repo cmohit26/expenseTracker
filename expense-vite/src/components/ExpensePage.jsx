@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { deleteCategory } from "../services/CategoryService";
 import styles from "./ExpensePage.module.css";
 
 // CATEGORY APIs
@@ -67,6 +68,22 @@ const ExpensePage = () => {
         console.error("Error fetching expenses:", err);
       });
     };
+
+    const handleCategoryDeleteClick = (categoryId) => {
+      const confirmDelete = window.confirm(
+        "Are you sure you want to delete this category?"
+      );
+
+      if (confirmDelete) {
+        deleteCategory(categoryId)
+          .then(() => {
+            fetchCategories(); // Refresh the table
+          })
+          .catch((err) => {
+            console.error("Error deleting category:", err);
+          });
+      }
+    };
     
   // ================= EXPENSE HANDLERS =================
   const handleChange = (e) => {
@@ -129,14 +146,10 @@ const ExpensePage = () => {
 
   const handleAddCategory = (e) => {
     e.preventDefault();
-
-
     const payload = {
       name: categoryData.name,
       globalCategory:false
     };
-
-
     createCategory(payload)
       .then(()=>{
         fetchCategories();
@@ -156,10 +169,67 @@ const ExpensePage = () => {
 
   return (
     <div className={styles.container}>
-
+      
       {/* Page Title */}
       <div className={styles.pageHeader}>
         <h2>Expense Management</h2>
+      </div>
+      
+      {/* ================= EXPENSE FORM ================= */}
+      <div className={styles.formContainer}>
+        <h3>Add New Expense</h3>
+        <form onSubmit={handleSubmitExpense} className={styles.form}>
+
+          <input
+            type="text"
+            name="title"
+            placeholder="Expense Title"
+            value={formData.title}
+            onChange={handleChange}
+            required
+          />
+
+          <input
+            type="number"
+            name="amount"
+            placeholder="Amount"
+            value={formData.amount}
+            onChange={handleChange}
+            step={100}
+            required
+          />
+
+          {/* CATEGORY DROPDOWN */}
+          <select
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            required
+          >
+          <option value="">
+            Select Category
+          </option>
+          { categories.map((cat) => (
+              <option
+                key={cat.id}
+                value={cat.id}
+              >
+                {cat.name}
+              </option>
+            ))
+          }
+          </select>
+
+          <input
+            type="date"
+            name="date"
+            value={formData.date}
+            onChange={handleChange}
+            required
+          />
+
+          <button type="submit">Add Expense</button>
+        </form>
       </div>
 
       {/* Expense Table */}
@@ -218,62 +288,6 @@ const ExpensePage = () => {
         </table>
       </div>
 
-      {/* ================= EXPENSE FORM ================= */}
-      <div className={styles.formContainer}>
-        <h3>Add New Expense</h3>
-        <form onSubmit={handleSubmitExpense} className={styles.form}>
-
-          <input
-            type="text"
-            name="title"
-            placeholder="Expense Title"
-            value={formData.title}
-            onChange={handleChange}
-            required
-          />
-
-          <input
-            type="number"
-            name="amount"
-            placeholder="Amount"
-            value={formData.amount}
-            onChange={handleChange}
-            step={100}
-            required
-          />
-
-          {/* CATEGORY DROPDOWN */}
-          <select
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            required
-          >
-          <option value="">
-            Select Category
-          </option>
-          { categories.map((cat) => (
-              <option
-                key={cat.id}
-                value={cat.id}
-              >
-                {cat.name}
-              </option>
-            ))
-          }
-          </select>
-
-          <input
-            type="date"
-            name="date"
-            value={formData.date}
-            onChange={handleChange}
-            required
-          />
-
-          <button type="submit">Add Expense</button>
-        </form>
-      </div>
 
       {/* ================= CATEGORY FORM ================= */}
       <div className={styles.formContainer}>
@@ -291,6 +305,53 @@ const ExpensePage = () => {
 
           <button type="submit">Add Category</button>
         </form>
+      </div>
+
+      {/* Category Table */}
+      <div className={styles.tableContainer}>
+        <h3>Personal Categories</h3>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Category</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            {/* Only Show Personal Categories Because of the filter */}
+            {categories.filter(cat => !cat.globalCategory).length > 0 ? (
+            // {categories.length > 0 ? (
+              // categories.map((category, index) => (
+              categories
+                .filter(cat => !cat.globalCategory)
+                .map((category, index) => (
+                  <tr key={category.id}>
+                    <td>{index + 1}</td>
+                    <td>{category.name}</td>
+                    <td>
+                      <button
+                        onClick={() => handleCategoryDeleteClick(category.id)}
+                        className={styles.deleteButton}
+                        title="Delete Category"
+                      >
+                        <i className="fas fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                ))
+            )  : (
+              <tr>
+                <td> --- </td>
+                <td> --- </td>
+                <td> --- </td>
+                <td> --- </td>
+                <td> --- </td>
+                <td> --- </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
 
     </div>

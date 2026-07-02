@@ -1,11 +1,50 @@
 import React, { useEffect, useState } from 'react';
 import styles from './UsersTable.module.css';
 import { listOfUsers, deleteUser, getSortedUsers } from '../services/UserServices';
+import { getUserCategories, getAvailableCategories, createCategory, deleteCategory} from "../services/CategoryService";
 
 // UsersTable: Displays users with search, sort trigger, edit/delete actions.
 const UsersTable = ({ openEditModal, openSortModal, sortColumn }) => {
 
   const [users, setUsers] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [categoryData, setCategoryData] = useState({
+    name: "",
+    globalCategory: true,
+  });
+
+  const loadCategories = () => {
+    getAvailableCategories().then((res) => {
+      console.log(res.data);
+      setCategories(res.data);
+    });
+  };
+
+  const handleCategoryChange = (e) => {
+    setCategoryData({
+      ...categoryData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleAddGlobalCategory = (e) => {
+    e.preventDefault();
+    createCategory({
+      name: categoryData.name,
+      globalCategory: true,
+    })
+    .then(() => {
+      loadCategories();
+
+      setCategoryData({
+        name: "",
+        globalCategory: true,
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+  };
 
   const loadUsers = () => {
     listOfUsers()
@@ -30,6 +69,7 @@ const UsersTable = ({ openEditModal, openSortModal, sortColumn }) => {
   // 🔥 Load users on first render
   useEffect(() => {
     loadUsers();
+    loadCategories();
   }, []);
 
   // 🔥 React to sorting changes
@@ -39,11 +79,11 @@ const UsersTable = ({ openEditModal, openSortModal, sortColumn }) => {
     }
   }, [sortColumn]);
 
-  const handleEditClick = (userId) => {
+  const handleUserEditClick = (userId) => {
     openEditModal(userId);
   };
 
-  const handleDeleteClick = (userId, userName) => {
+  const handleUserDeleteClick = (userId, userName) => {
     const confirmDelete = window.confirm(
       `Are you sure you want to delete user "${userName}"? This action cannot be undone.`
     );
@@ -67,8 +107,123 @@ const UsersTable = ({ openEditModal, openSortModal, sortColumn }) => {
     }
   };
 
+  const handleCategoryDeleteClick = (categoryId, categoryName) => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete Category "${categoryName}"? This action cannot be undone.`
+    );
+
+    if (confirmDelete) {
+      deleteCategory(categoryId)
+        .then(() => {
+          alert('Category deleted successfully!');
+          
+          // 🔁 Reload depending on sort state
+          if (sortColumn) {
+            loadSortedUsers(sortColumn);
+          } else {
+            loadUsers();
+          }
+        })
+        .catch(error => {
+          console.error('Error deleting category:', error);
+          alert('Error deleting category. Please try again.');
+        });
+    }
+  };
+
   return (
+  
     <div className={styles.container}>
+
+      {/* Category Table */}
+      <div className={styles.pageHeader}>
+        <h2></h2>
+        <h2>Category Table</h2>
+        <h2></h2>
+      </div>
+
+      <div className={styles.panel}>
+
+        <h2>Add A Global Category</h2>
+        <form onSubmit={handleAddGlobalCategory} className={styles.form}>
+          <input
+            type="text"
+            name="name"
+            placeholder="Category Title"
+            value={categoryData.name}
+            onChange={handleCategoryChange}
+            required
+          />
+          <button type="submit">
+            Add Category
+          </button>
+        </form>
+
+        <div className={styles.rowPadding}>
+
+          <h5
+            className={styles.tableTitle}
+            style={{ marginTop: "25px" }}
+          >
+            <b>All Categories</b>
+          </h5>
+
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Category Name</th>
+                <th>Category Type</th>
+                <th>Created By</th>
+                <th>Edit</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {categories.length > 0 ? (
+                categories.map((category) => (
+                  <tr key={category.id}>
+                    <td>{category.id}</td>
+                    <td>{category.name}</td>
+                    <td> {category.globalCategory ? "Global" : "Personal"} </td>
+                    <td>
+                      {category.globalCategory
+                        ? "Admin"
+                        : `${category.user?.firstName ?? ""} ${category.user?.lastName ?? ""}`}
+                    </td>
+                    {/* Edit Button */}
+                    <td> FIX
+                      <button
+                        className={styles.editButton}
+                        title="Edit Category"
+                        onClick={() => handleCategoryEditClick(category.id)}
+                      >
+                        <i className="fas fa-edit"></i>
+                      </button>
+                    </td>
+                    {/* Delete Button */}
+                    <td> BACKEND FIX
+                      <button
+                        className={styles.deleteButton}
+                        title="Delete Category"
+                        onClick={() => handleCategoryDeleteClick(category.id, category.name)}
+                      >
+                        <i className="fas fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" style={{ textAlign: "center" }}>
+                    No Categories Found
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
       {/* Page Title */}
       <div className={styles.pageHeader}>
@@ -130,7 +285,7 @@ const UsersTable = ({ openEditModal, openSortModal, sortColumn }) => {
                       <td>{user.email}</td>
                       <td>
                         <button
-                          onClick={() => handleEditClick(user.id)}
+                          onClick={() => handleUserEditClick(user.id)}
                           className={styles.editButton}
                           title="Edit User"
                         >
@@ -140,7 +295,7 @@ const UsersTable = ({ openEditModal, openSortModal, sortColumn }) => {
                       <td>
                         <button
                           onClick={() =>
-                            handleDeleteClick(user.id, `${user.firstName} ${user.lastName}`)
+                            handleUserDeleteClick(user.id, `${user.firstName} ${user.lastName}`)
                           }
                           className={styles.deleteButton}
                           title="Delete User"

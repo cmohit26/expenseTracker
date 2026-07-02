@@ -12,9 +12,7 @@ public class DashboardController {
 
     private final DashboardService dashboardService;
 
-    public DashboardController(
-            DashboardService dashboardService) {
-
+    public DashboardController(DashboardService dashboardService) {
         this.dashboardService = dashboardService;
     }
 

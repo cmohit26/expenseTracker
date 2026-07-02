@@ -3,6 +3,7 @@ package com.mohit.expense_backend.dto.DashboardDTOs;
 public class MonthlyExpenseDTO {
 
     private String month;
+
     private Double amount;
 
     public MonthlyExpenseDTO() {}
