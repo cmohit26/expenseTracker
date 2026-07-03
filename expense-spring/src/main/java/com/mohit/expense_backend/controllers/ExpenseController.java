@@ -24,7 +24,7 @@ public class ExpenseController {
 
     // Get all expenses of user
     @GetMapping
-    public List<Expense> getExpensesByUser(@PathVariable Integer userId) {
+    public List<Expense> getExpensesByUser() {
         return expenseService.getExpensesByUser();
     }
 

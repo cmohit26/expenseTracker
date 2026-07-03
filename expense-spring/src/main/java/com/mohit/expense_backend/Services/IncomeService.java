@@ -4,6 +4,7 @@ import com.mohit.expense_backend.Entities.Income;
 import com.mohit.expense_backend.Repositories.IncomeRepository;
 import com.mohit.expense_backend.Entities.User;
 import com.mohit.expense_backend.Repositories.UserRepository;
+import com.mohit.expense_backend.Security.CurrentUserService;
 import com.mohit.expense_backend.dto.IncomeRequestDTO;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +15,16 @@ import java.util.List;
 public class IncomeService {
 
     private final IncomeRepository incomeRepository;
-    private final UserRepository userRepository;
+    private final CurrentUserService currentUserService;
 
-    public IncomeService(IncomeRepository incomeRepository, UserRepository userRepository) {
+    public IncomeService(IncomeRepository incomeRepository, CurrentUserService currentUserService) {
         this.incomeRepository = incomeRepository;
-        this.userRepository = userRepository;
+        this.currentUserService = currentUserService;
     }
 
-    public Income addIncome(User user, IncomeRequestDTO dto) {
+    public Income addIncome(IncomeRequestDTO dto) {
+
+        User user = currentUserService.getCurrentUser();
 
         Income income = new Income();
         income.setAmount(dto.getAmount());
@@ -32,7 +35,9 @@ public class IncomeService {
         return incomeRepository.save(income);
     }
 
-    public List<Income> getUserIncomes(User user) {
+    public List<Income> getUserIncomes() {
+        User user = currentUserService.getCurrentUser();
+
         return incomeRepository.findByUser(user);
     }
 

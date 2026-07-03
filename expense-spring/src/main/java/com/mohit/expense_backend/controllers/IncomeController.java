@@ -25,13 +25,13 @@ public class IncomeController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestBody IncomeRequestDTO dto) {
         User user = userPrincipal.getUser();
-        return incomeService.addIncome(user, dto);
+        return incomeService.addIncome(dto);
     }
 
     // Get all incomes for a user
     @GetMapping("/me")
     public List<Income> getMyIncomes(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-        return incomeService.getUserIncomes(userPrincipal.getUser());
+        return incomeService.getUserIncomes();
     }
 
     // Update income

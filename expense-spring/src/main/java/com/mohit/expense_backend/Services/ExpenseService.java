@@ -2,6 +2,7 @@ package com.mohit.expense_backend.Services;
 
 import com.mohit.expense_backend.Entities.Expense;
 import com.mohit.expense_backend.Repositories.ExpenseRepository;
+import com.mohit.expense_backend.Security.CurrentUserService;
 import com.mohit.expense_backend.Security.UserPrincipal;
 import com.mohit.expense_backend.dto.ExpenseDTO;
 import com.mohit.expense_backend.Entities.Category;
@@ -20,20 +21,20 @@ public class ExpenseService {
 
     private final ExpenseRepository expenseRepository;
     private final CategoryRepository categoryRepository;
-    private final UserRepository userRepository;
+    private final CurrentUserService currentUserService;
 
+    //Either Use @AutoWired or Constructor Injection (Just Two ways of doing it)
     public ExpenseService(ExpenseRepository expenseRepository,
                           CategoryRepository categoryRepository,
-                          UserRepository userRepository) {
+                          CurrentUserService currentUserService) {
         this.expenseRepository = expenseRepository;
         this.categoryRepository = categoryRepository;
-        this.userRepository = userRepository;
+        this.currentUserService = currentUserService;
     }
 
     public Expense createExpense(ExpenseDTO dto) {
-        UserPrincipal userPrincipal = (UserPrincipal)
-                SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userPrincipal.getUser();
+        User user = currentUserService.getCurrentUser();
+
         Category category = categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
         Expense expense = new Expense();
@@ -47,20 +48,14 @@ public class ExpenseService {
     }
 
     public List<Expense> getExpensesByUser() {
-        UserPrincipal userPrincipal = (UserPrincipal)
-                SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        Integer userId = userPrincipal.getUser().getId();
+        Integer userId = currentUserService.getCurrentUserId();
 
         return expenseRepository.findByUserIdOrderByDateDesc(userId);
     }
 
     public List<Expense> getRecentExpenses() {
 
-        UserPrincipal userPrincipal = (UserPrincipal)
-                SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        Integer userId = userPrincipal.getUser().getId();
+        Integer userId = currentUserService.getCurrentUserId();
 
         return expenseRepository.findTop10ByUserIdOrderByDateDesc(userId);
     }
@@ -83,10 +78,7 @@ public class ExpenseService {
 
     public void deleteExpense(Integer id) {
 
-        UserPrincipal userPrincipal = (UserPrincipal)
-                SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        Integer userId = userPrincipal.getUser().getId();
+        Integer userId = currentUserService.getCurrentUserId();
 
         Expense expense = expenseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Expense not found"));

@@ -4,6 +4,7 @@ import com.mohit.expense_backend.Entities.Expense;
 import com.mohit.expense_backend.Repositories.CategoryRepository;
 import com.mohit.expense_backend.Repositories.ExpenseRepository;
 import com.mohit.expense_backend.Repositories.IncomeRepository;
+import com.mohit.expense_backend.Security.CurrentUserService;
 import com.mohit.expense_backend.Security.UserPrincipal;
 import com.mohit.expense_backend.dto.DashboardDTOs.DashboardDTO;
 import com.mohit.expense_backend.dto.DashboardDTOs.MonthlyExpenseDTO;
@@ -21,31 +22,24 @@ public class DashboardService {
 
     private final IncomeRepository incomeRepository;
     private final ExpenseRepository expenseRepository;
-    private final CategoryRepository categoryRepository;
+    private final CurrentUserService currentUserService;
 
     public DashboardService(
             IncomeRepository incomeRepository,
             ExpenseRepository expenseRepository,
-            CategoryRepository categoryRepository) {
+            CurrentUserService currentUserService) {
 
         this.incomeRepository = incomeRepository;
         this.expenseRepository = expenseRepository;
-        this.categoryRepository = categoryRepository;
+        this.currentUserService = currentUserService;
     }
 
     public DashboardDTO getDashboardData() {
 
         DashboardDTO dto = new DashboardDTO();
 
-        //Getting Logged In User
-        UserPrincipal principal =
-                (UserPrincipal) SecurityContextHolder
-                        .getContext()
-                        .getAuthentication()
-                        .getPrincipal();
-
         //whatever user is logged in
-        Integer userId = principal.getUser().getId();
+        Integer userId = currentUserService.getCurrentUserId();
 
         //Get
         Double totalIncome = incomeRepository.getTotalIncome(userId);

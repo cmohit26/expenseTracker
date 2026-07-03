@@ -3,6 +3,7 @@ package com.mohit.expense_backend.Services;
 import com.mohit.expense_backend.Entities.Category;
 import com.mohit.expense_backend.Entities.User;
 import com.mohit.expense_backend.Repositories.CategoryRepository;
+import com.mohit.expense_backend.Security.CurrentUserService;
 import com.mohit.expense_backend.Security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,15 +17,13 @@ public class CategoryService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private CurrentUserService currentUserService;
 
     public Category createCategory(Category category) {
 
-        UserPrincipal principal =
-                (UserPrincipal) SecurityContextHolder.getContext()
-                        .getAuthentication()
-                        .getPrincipal();
+        User user = currentUserService.getCurrentUser();
 
-        User user = principal.getUser();
 //        String role = user.getRoles();
 
         if (categoryRepository.findByName(category.getName()).isPresent()) {
@@ -46,12 +45,8 @@ public class CategoryService {
 
     // ================= USER CATEGORIES =================
     public List<Category> getUserCategories() {
-        UserPrincipal principal =
-                (UserPrincipal) SecurityContextHolder.getContext()
-                        .getAuthentication()
-                        .getPrincipal();
 
-        Integer userId = principal.getUser().getId();
+        Integer userId = currentUserService.getCurrentUserId();
 
         return categoryRepository.findByUserId(userId);
     }
@@ -63,23 +58,16 @@ public class CategoryService {
 
     // ================= AVAILABLE (EXPENSE PAGE) =================
     public List<Category> getAvailableCategories() {
-        UserPrincipal principal =
-                (UserPrincipal) SecurityContextHolder.getContext()
-                        .getAuthentication()
-                        .getPrincipal();
 
-        Integer userId = principal.getUser().getId();
+        Integer userId = currentUserService.getCurrentUserId();
 
         return categoryRepository.findByGlobalCategoryTrueOrUserId(userId);
     }
 
     public List<Category> getCategoriesForCurrentUser(){
-        UserPrincipal principal =
-                (UserPrincipal) SecurityContextHolder
-                        .getContext()
-                        .getAuthentication()
-                        .getPrincipal();
-        Integer userId = principal.getUser().getId();
+
+        Integer userId = currentUserService.getCurrentUserId();
+
         return categoryRepository.getAvailableCategories(userId);
     }
 
@@ -88,12 +76,7 @@ public class CategoryService {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
-        UserPrincipal principal =
-                (UserPrincipal) SecurityContextHolder.getContext()
-                        .getAuthentication()
-                        .getPrincipal();
-
-        Integer userId = principal.getUser().getId();
+        Integer userId = currentUserService.getCurrentUserId();
 
         boolean accessible =
                 category.isGlobalCategory()
@@ -112,12 +95,8 @@ public class CategoryService {
         Category existing = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
-        UserPrincipal principal =
-                (UserPrincipal) SecurityContextHolder.getContext()
-                        .getAuthentication()
-                        .getPrincipal();
+        Integer userId = currentUserService.getCurrentUserId();
 
-        Integer userId = principal.getUser().getId();
 //        String role = principal.getUser().getRoles();
 
         boolean isOwner = existing.getUser() != null
@@ -136,12 +115,8 @@ public class CategoryService {
 
     public void deleteCategory(Integer id) {
 
-        UserPrincipal userPrincipal =
-                (UserPrincipal) SecurityContextHolder.getContext()
-                        .getAuthentication()
-                        .getPrincipal();
+        Integer userId = currentUserService.getCurrentUserId();
 
-        Integer userId = userPrincipal.getUser().getId();
 //        String role = userPrincipal.getUser().getRoles();
 
         Category category = getCategoryById(id);

@@ -26,7 +26,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
     private final BCryptPasswordEncoder passwordEncoder;
+
     public UserResponseDTO mapToResponseDTO(User user) {
         UserResponseDTO dto = new UserResponseDTO();
         dto.setId(user.getId());
