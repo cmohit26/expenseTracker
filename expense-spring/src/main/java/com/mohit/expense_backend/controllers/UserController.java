@@ -1,6 +1,7 @@
 package com.mohit.expense_backend.controllers;
 
 import com.mohit.expense_backend.Entities.User;
+import com.mohit.expense_backend.Security.CurrentUserService;
 import com.mohit.expense_backend.Security.UserPrincipal;
 import com.mohit.expense_backend.Repositories.UserRepository;
 import com.mohit.expense_backend.dto.UserRequestDTO;
@@ -24,6 +25,9 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    CurrentUserService currentUserService;
 
     @Autowired
     UserRepository userRepository;
@@ -84,17 +88,27 @@ public class UserController {
         }
     }
 
+//    @GetMapping("/currentUser")
+//    public ResponseEntity<UserResponseDTO> getCurrentUser(Authentication authentication) {
+//
+//        if (authentication == null || !authentication.isAuthenticated()) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//        }
+//
+//        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+//        User user = userRepository.findByEmail(userPrincipal.getUsername());
+//
+//        return ResponseEntity.ok(userService.mapToResponseDTO(user));
+//    }
+
     @GetMapping("/currentUser")
-    public ResponseEntity<UserResponseDTO> getCurrentUser(Authentication authentication) {
+    public ResponseEntity<UserResponseDTO> getCurrentUser() {
 
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        User user = userRepository.findByEmail(userPrincipal.getUsername());
-
-        return ResponseEntity.ok(userService.mapToResponseDTO(user));
+        return ResponseEntity.ok(
+                userService.mapToResponseDTO(
+                        currentUserService.getCurrentUser()
+                )
+        );
     }
 
     @PostMapping("/login")

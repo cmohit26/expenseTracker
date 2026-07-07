@@ -1,16 +1,13 @@
-package com.mohit.expense_backend.Services;
+package com.mohit.expense_backend.Services.ExpenseServices;
 
+import com.mohit.expense_backend.Entities.Category;
 import com.mohit.expense_backend.Entities.Expense;
+import com.mohit.expense_backend.Entities.User;
+import com.mohit.expense_backend.Repositories.CategoryRepository;
 import com.mohit.expense_backend.Repositories.ExpenseRepository;
 import com.mohit.expense_backend.Security.CurrentUserService;
-import com.mohit.expense_backend.Security.UserPrincipal;
 import com.mohit.expense_backend.dto.ExpenseDTO;
-import com.mohit.expense_backend.Entities.Category;
-import com.mohit.expense_backend.Repositories.CategoryRepository;
-import com.mohit.expense_backend.Entities.User;
-import com.mohit.expense_backend.Repositories.UserRepository;
-
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -49,15 +46,20 @@ public class ExpenseService {
 
     public List<Expense> getExpensesByUser() {
         Integer userId = currentUserService.getCurrentUserId();
-
         return expenseRepository.findByUserIdOrderByDateDesc(userId);
     }
 
     public List<Expense> getRecentExpenses() {
-
         Integer userId = currentUserService.getCurrentUserId();
+        return expenseRepository.findRecentExpenses(
+                userId,
+                PageRequest.of(0, 10)
+        );
+    }
 
-        return expenseRepository.findTop10ByUserIdOrderByDateDesc(userId);
+    public Double getTotalExpenses() {
+        Integer userId = currentUserService.getCurrentUserId();
+        return expenseRepository.getTotalExpenses(userId);
     }
 
     public List<Expense> getExpensesByCategory(Integer userId, Integer categoryId) {
@@ -94,4 +96,5 @@ public class ExpenseService {
         return expenseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Expense not found"));
     }
+
 }

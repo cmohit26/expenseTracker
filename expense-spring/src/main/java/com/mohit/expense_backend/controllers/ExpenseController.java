@@ -1,6 +1,6 @@
 package com.mohit.expense_backend.controllers;
 import com.mohit.expense_backend.Entities.Expense;
-import com.mohit.expense_backend.Services.ExpenseService;
+import com.mohit.expense_backend.Services.ExpenseServices.ExpenseService;
 import com.mohit.expense_backend.dto.ExpenseDTO;
 import org.springframework.web.bind.annotation.*;
 

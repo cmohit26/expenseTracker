@@ -1,5 +1,6 @@
 package com.mohit.expense_backend.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 
@@ -15,7 +16,8 @@ public class Category {
 
     private boolean globalCategory;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

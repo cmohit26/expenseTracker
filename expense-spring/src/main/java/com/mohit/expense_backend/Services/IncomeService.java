@@ -37,8 +37,12 @@ public class IncomeService {
 
     public List<Income> getUserIncomes() {
         User user = currentUserService.getCurrentUser();
-
         return incomeRepository.findByUser(user);
+    }
+
+    public Double getTotalIncome() {
+        Integer userId = currentUserService.getCurrentUserId();
+        return incomeRepository.getTotalIncome(userId);
     }
 
     public Income updateIncome(int incomeId, Income updatedIncome) {

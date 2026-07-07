@@ -1,6 +1,7 @@
 package com.mohit.expense_backend.Repositories;
 
 import com.mohit.expense_backend.Entities.Expense;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -10,7 +11,14 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
 
     List<Expense> findByUserId(Integer userId);
 
-    List<Expense> findTop10ByUserIdOrderByDateDesc(Integer userId);
+    @Query("""
+        SELECT e
+        FROM Expense e
+        JOIN FETCH e.category
+        WHERE e.user.id = :userId
+        ORDER BY e.date DESC
+        """)
+    List<Expense> findRecentExpenses(Integer userId, Pageable pageable);
 
     List<Expense> findByUserIdAndCategoryId(Integer userId, Integer categoryId);
 
