@@ -24,21 +24,24 @@ public class CategoryController {
     }
 
     // ================= USER PAGE =================
-    @GetMapping("/user")
+    @GetMapping("/user/all")
     public List<Category> getUserCategories() {
         return categoryService.getUserCategories();
     }
 
-    // ================= ADMIN PAGE =================
-    @GetMapping("/global")
-    public List<Category> getGlobalCategories() {
-        return categoryService.getGlobalCategories();
-    }
-
-    // ================= EXPENSE PAGE =================
-    @GetMapping("/available")
+    @GetMapping("/user/available")
     public List<Category> getAvailableCategories() {
         return categoryService.getAvailableCategories();
+    }
+
+    @GetMapping("/admin/all")
+    public List<Category> getAllCategories() {
+        return categoryService.getAllCategories();
+    }
+
+    @GetMapping("/admin/global")
+    public List<Category> getGlobalCategories() {
+        return categoryService.getGlobalCategories();
     }
 
     @PutMapping("/{id}")

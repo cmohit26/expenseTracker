@@ -43,6 +43,14 @@ public class CategoryService {
         return categoryRepository.save(category);
     }
 
+    public List<Category> getAllCategories() {
+
+        // only verify someone is logged in
+        currentUserService.getCurrentUser();
+
+        return categoryRepository.findAll();
+    }
+
     // ================= USER CATEGORIES =================
     public List<Category> getUserCategories() {
 

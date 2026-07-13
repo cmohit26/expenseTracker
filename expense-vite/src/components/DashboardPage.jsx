@@ -152,7 +152,12 @@ function DashboardPage({ onNavigate }) {
 
       {/* Page Title */}
       <div className={styles.pageHeader}>
-        <h2>User Dashboard</h2>
+        <h2>User Dashboard <br/> 
+          <h4> Mohit <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Username: tmohit2020@gmail.com <br/> 
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Password: 123 </h4>
+          <h4> Satya <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Username: satya@7275.com <br/> 
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Password: 111 </h4>
+        </h2>
       </div>
 
       {/* Summary Cards (ROW 1) */}
@@ -320,7 +325,7 @@ function DashboardPage({ onNavigate }) {
 
         <h4><i className="fa-solid fa-bug"></i> Fix the bugs <br/></h4>
         <h5>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
         </h5>
 
         <h4><i className="fa-solid fa-search"></i> Search and Filter</h4>

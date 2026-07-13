@@ -9,12 +9,21 @@ import org.springframework.stereotype.Service;
 public class CurrentUserService {
 
     public User getCurrentUser() {
+
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
 
-        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        if (authentication == null) {
+            throw new RuntimeException("No authentication found");
+        }
 
-        return principal.getUser();
+        Object principal = authentication.getPrincipal();
+
+        if (!(principal instanceof UserPrincipal userPrincipal)) {
+            throw new RuntimeException("User is not authenticated");
+        }
+
+        return userPrincipal.getUser();
     }
 
     public Integer getCurrentUserId() {

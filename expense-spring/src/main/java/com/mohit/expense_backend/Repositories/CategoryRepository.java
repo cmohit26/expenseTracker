@@ -11,8 +11,6 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
     Optional<Category> findByName(String name);
 
-    boolean existsByName(String name);
-
     @Query("""
     SELECT c
     FROM Category c
@@ -27,10 +25,6 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
     List<Category> findByGlobalCategoryTrueOrUserId(Integer userId);
 
-//    @Query("""
-//       SELECT COUNT(c)
-//       FROM Category c
-//       WHERE c.user.id = :userId
-//       """)
-//    Integer getCategoryCount(Integer userId);
+    List<Category> findAll();      // already inherited from JpaRepository
+
 }

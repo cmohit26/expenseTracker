@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './UsersTable.module.css';
 import { listOfUsers, deleteUser, getSortedUsers } from '../services/UserServices';
-import { getUserCategories, getAvailableCategories, createCategory, deleteCategory} from "../services/CategoryService";
+import { getAllCategories, getUserCategories, getAvailableCategories, createCategory, deleteCategory} from "../services/CategoryService";
 
 // UsersTable: Displays users with search, sort trigger, edit/delete actions.
 const UsersTable = ({ openEditModal, openSortModal, sortColumn }) => {
@@ -14,9 +14,9 @@ const UsersTable = ({ openEditModal, openSortModal, sortColumn }) => {
   });
 
   const loadCategories = () => {
-    getAvailableCategories().then((res) => {
-      console.log(res.data);
-      setCategories(res.data);
+    getAllCategories()
+    .then(res => {
+        setCategories(res.data);
     });
   };
 
@@ -187,9 +187,7 @@ const UsersTable = ({ openEditModal, openSortModal, sortColumn }) => {
                     <td>{category.name}</td>
                     <td> {category.globalCategory ? "Global" : "Personal"} </td>
                     <td>
-                      {category.globalCategory
-                        ? "Admin"
-                        : `${category.user?.firstName ?? ""} ${category.user?.lastName ?? ""}`}
+                      {category.globalCategory ? "[fix] Admin_{USERNAME}" : `${category.user?.firstName ?? "[fix] User with name"} ${category.user?.lastName ?? ""}`}
                     </td>
                     {/* Edit Button */}
                     <td> FIX
