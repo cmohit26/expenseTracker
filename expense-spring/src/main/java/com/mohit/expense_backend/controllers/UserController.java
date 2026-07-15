@@ -2,7 +2,6 @@ package com.mohit.expense_backend.controllers;
 
 import com.mohit.expense_backend.Entities.User;
 import com.mohit.expense_backend.Security.CurrentUserService;
-import com.mohit.expense_backend.Security.UserPrincipal;
 import com.mohit.expense_backend.Repositories.UserRepository;
 import com.mohit.expense_backend.dto.UserRequestDTO;
 import com.mohit.expense_backend.dto.UserResponseDTO;
@@ -12,7 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +21,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @CrossOrigin
+@EnableMethodSecurity
 public class UserController {
 
     @Autowired
@@ -45,6 +46,7 @@ public class UserController {
         return userService.getUserById(id);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/v1/user/{id}")
     public String deleteUser(@PathVariable Integer id) {
         System.out.println("Deleting user with ID: " + id);
@@ -52,6 +54,7 @@ public class UserController {
         return "redirect:/admin/userInfo"; // go back to admin page
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/v1/user/{id}")
     public String editUser(@PathVariable Integer id, @ModelAttribute User user) {
         user.setId(id); // Ensure the ID from URL is used
@@ -65,8 +68,10 @@ public class UserController {
         return ResponseEntity.ok("User registered successfully");
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/v1/users")
     public List<UserResponseDTO> getAllUsers(){
+        System.out.println("_-_-_-_-_-_-_-_-_-__-__-__- GET ALL USERS()");
         return userService.getAllUsers();
     }
 
@@ -87,19 +92,6 @@ public class UserController {
             return userService.getAllUsers();
         }
     }
-
-//    @GetMapping("/currentUser")
-//    public ResponseEntity<UserResponseDTO> getCurrentUser(Authentication authentication) {
-//
-//        if (authentication == null || !authentication.isAuthenticated()) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-//        }
-//
-//        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-//        User user = userRepository.findByEmail(userPrincipal.getUsername());
-//
-//        return ResponseEntity.ok(userService.mapToResponseDTO(user));
-//    }
 
     @GetMapping("/currentUser")
     public ResponseEntity<UserResponseDTO> getCurrentUser() {

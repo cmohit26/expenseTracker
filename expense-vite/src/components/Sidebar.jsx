@@ -67,13 +67,17 @@ const Sidebar = ({currentUser, onNavigate, currentPage}) => {
             <i className="fa-solid fa-chart-line"></i> User Dashboard
           </a>
 
-          <a 
-            href="#" 
-            className={`w3-bar-item w3-button w3-padding ${currentPage === 'users' ? 'w3-blue' : ''}`}
-            onClick={() => handleNavigation('users')}
-          >
-            <i className="fa fa-lock"></i> ADMIN Information
-          </a>
+          {currentUser?.roles === "ROLE_ADMIN" && (
+            <a
+            href="#"
+            className={`w3-bar-item w3-button w3-padding ${
+              currentPage === "users" ? "w3-blue" : ""
+            }`}
+              onClick={() => handleNavigation("users")}
+            >
+              <i className="fa fa-lock"></i> ADMIN Information
+            </a>
+          )}
           
           <a 
             href="#" 

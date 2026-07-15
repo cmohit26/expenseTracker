@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class UserPrincipal implements UserDetails {
 
@@ -28,12 +27,16 @@ public class UserPrincipal implements UserDetails {
         if (roles == null || roles.isBlank()) {
             return List.of(new SimpleGrantedAuthority("ROLE_USER"));
         }
-        return Arrays.stream(roles.split(","))
-                .map(String::trim)
-                .filter(r -> !r.isEmpty())
-                .map(r -> r.startsWith("ROLE_") ? r : "ROLE_" + r)
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toUnmodifiableList());
+        List<SimpleGrantedAuthority> authorities =
+                Arrays.stream(roles.split(","))
+                        .map(String::trim)
+                        .map(r -> r.startsWith("ROLE_") ? r : "ROLE_" + r)
+                        .map(SimpleGrantedAuthority::new)
+                        .toList();
+
+        System.out.println("-----------------------------------------------------------------------" + authorities);
+
+        return authorities;
     }
 
     @Override
