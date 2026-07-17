@@ -1,6 +1,7 @@
 package com.mohit.expense_backend.Services.ExpenseServices;
 
 import com.mohit.expense_backend.Entities.Category;
+import com.mohit.expense_backend.Entities.Enums.ApprovalStatus;
 import com.mohit.expense_backend.Entities.Expense;
 import com.mohit.expense_backend.Entities.User;
 import com.mohit.expense_backend.Repositories.CategoryRepository;
@@ -40,6 +41,7 @@ public class ExpenseService {
         expense.setDate(LocalDate.parse(dto.getDate()));
         expense.setCategory(category);
         expense.setUser(user);
+        expense.setStatus(ApprovalStatus.PENDING);
 
         return expenseRepository.save(expense);
     }
@@ -95,6 +97,25 @@ public class ExpenseService {
     public Expense getExpenseById(Integer id) {
         return expenseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Expense not found"));
+    }
+
+    public List<Expense> findPendingExpenses() {
+        return expenseRepository.findByStatus(ApprovalStatus.PENDING);
+    }
+
+    public Expense approveExpense(int id) {
+        Expense expense = expenseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Expense not found"));
+        expense.setStatus(ApprovalStatus.APPROVED);
+        return expenseRepository.save(expense);
+    }
+
+    public Expense rejectExpense(Integer id, String reason) {
+        Expense expense = expenseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Expense not found"));
+        expense.setStatus(ApprovalStatus.REJECTED);
+        expense.setRejectionReason(reason);
+        return expenseRepository.save(expense);
     }
 
 }

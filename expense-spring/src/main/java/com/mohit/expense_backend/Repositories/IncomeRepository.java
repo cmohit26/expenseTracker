@@ -1,5 +1,6 @@
 package com.mohit.expense_backend.Repositories;
 
+import com.mohit.expense_backend.Entities.Enums.ApprovalStatus;
 import com.mohit.expense_backend.Entities.Income;
 import com.mohit.expense_backend.Entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +16,10 @@ public interface IncomeRepository extends JpaRepository<Income, Integer> {
        SELECT COALESCE(SUM(i.amount),0)
        FROM Income i
        WHERE i.user.id = :userId
+       AND i.status = 'APPROVED'
        """)
     Double getTotalIncome(Integer userId);
+
+    List<Income> findByStatus(ApprovalStatus status);
 
 }

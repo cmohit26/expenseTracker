@@ -1,6 +1,7 @@
 package com.mohit.expense_backend.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mohit.expense_backend.Entities.Enums.ApprovalStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,6 +15,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Entity
 public class Expense {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +39,27 @@ public class Expense {
 
     @Temporal(TemporalType.DATE)
     private LocalDate date;
+
+    //ENUM
+    @Enumerated(EnumType.STRING)
+    private ApprovalStatus status;
+
+    @Column(nullable = false)
+    private String rejectionReason;
+
+    public ApprovalStatus getStatus() {
+        return status;
+    }
+    public void setStatus(ApprovalStatus status) {
+        this.status = status;
+    }
+
+    public String getRejectionReason() {
+        return rejectionReason;
+    }
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
+    }
 
     public Integer getId() {
         return id;

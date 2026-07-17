@@ -1,5 +1,6 @@
 package com.mohit.expense_backend.Services;
 
+import com.mohit.expense_backend.Entities.Enums.ApprovalStatus;
 import com.mohit.expense_backend.Entities.Income;
 import com.mohit.expense_backend.Repositories.IncomeRepository;
 import com.mohit.expense_backend.Entities.User;
@@ -58,5 +59,24 @@ public class IncomeService {
 
     public void deleteIncome(int incomeId) {
         incomeRepository.deleteById(incomeId);
+    }
+
+    public List<Income> findPendingIncomes() {
+        return incomeRepository.findByStatus(ApprovalStatus.PENDING);
+    }
+
+    public Income approveIncome(int id) {
+        Income income = incomeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Income not found"));
+        income.setStatus(ApprovalStatus.APPROVED);
+        return incomeRepository.save(income);
+    }
+
+    public Income rejectIncome(int id, String reason) {
+        Income income = incomeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Income not found"));
+        income.setStatus(ApprovalStatus.REJECTED);
+        income.setRejectionReason(reason);
+        return incomeRepository.save(income);
     }
 }

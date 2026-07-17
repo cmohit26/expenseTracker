@@ -1,5 +1,6 @@
 package com.mohit.expense_backend.Repositories;
 
+import com.mohit.expense_backend.Entities.Enums.ApprovalStatus;
 import com.mohit.expense_backend.Entities.Expense;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,8 +29,11 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
        SELECT COALESCE(SUM(e.amount),0)
        FROM Expense e
        WHERE e.user.id = :userId
+       AND e.status = 'APPROVED'
        """)
     Double getTotalExpenses(Integer userId);
+
+    List<Expense> findByStatus(ApprovalStatus status);
 
 }
 
