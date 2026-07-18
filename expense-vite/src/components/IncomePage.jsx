@@ -11,6 +11,8 @@ import {
 function IncomePage() {
   const [incomes, setIncomes] = useState([]);
 
+  const [selectedRejectionReason, setSelectedRejectionReason] = useState(null);
+
   const [formData, setFormData] = useState({
     amount: "",
     source: "",
@@ -86,6 +88,15 @@ function IncomePage() {
     setEditId(income.id);
   };
 
+  const showRejectionReason = (reason) => {
+    setSelectedRejectionReason(reason);
+  };
+
+
+  const closeRejectionReason = () => {
+    setSelectedRejectionReason(null);
+  };
+
   return (
     <div className={tableStyles.container}>
       {/* TABLE */}
@@ -100,6 +111,7 @@ function IncomePage() {
               <th>Source</th>
               <th>Date</th>
               <th>Amount</th>
+              <th>Status</th> 
               <th>Edit</th>
               <th>Delete</th>
             </tr>
@@ -112,6 +124,41 @@ function IncomePage() {
                   <td>{income.source}</td>
                   <td>{income.date}</td>
                   <td>Rs. {income.amount}</td>
+                  <td>
+                    {
+                    income.status === "PENDING" &&
+                    <span style={{
+                        background:"#fff3cd",
+                        color:"#856404",
+                        padding:"5px 10px",
+                        borderRadius:"15px"
+                    }}>
+                        🟡 Pending
+                    </span>
+                    }
+                    {
+                    income.status === "APPROVED" &&
+                    <span style={{
+                        background:"#d4edda",
+                        color:"#155724",
+                        padding:"5px 10px",
+                        borderRadius:"15px"
+                    }}>
+                        🟢 Approved
+                    </span>
+                    }
+                    {
+                      income.status === "REJECTED" &&
+
+                      <span
+                        className={tableStyles.rejectedBadge}
+                        onClick={() => showRejectionReason(income.rejectionReason)}
+                        style={{cursor:"pointer"}}
+                      >
+                        🔴 Rejected
+                      </span>
+                    }
+                  </td>
                   <td>
                     <button
                       className={tableStyles.editButton}
@@ -132,6 +179,7 @@ function IncomePage() {
               ))
             ) : (
               <tr>
+                <td> --- </td>
                 <td> --- </td>
                 <td> --- </td>
                 <td> --- </td>
@@ -187,6 +235,20 @@ function IncomePage() {
           </button>
         </form>
       </div>
+
+      {selectedRejectionReason && (
+        <div className={tableStyles.modalOverlay}>
+          <div className={tableStyles.reasonModal}>
+            <h3>Rejection Reason</h3>
+            <p>{selectedRejectionReason}</p>
+
+            <button onClick={closeRejectionReason}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

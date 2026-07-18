@@ -9,10 +9,13 @@ export const createExpense = (expenseData) =>
   });
 
 // Get all expenses of a specific user
-export const getExpensesByUser = (userId) =>
-  axios.get(`${REST_API_EXPENSE_URL}/user/${userId}`, {
-    withCredentials: true
-  });
+export const getExpensesByUser = () =>
+axios.get(
+  REST_API_EXPENSE_URL,
+  {
+    withCredentials:true
+  }
+);
 
 // Get recent 10 expenses of a user
 export const getRecentExpenses = () =>
@@ -46,3 +49,11 @@ export const deleteExpense = (id) =>
   axios.delete(`${REST_API_EXPENSE_URL}/${id}`, {
     withCredentials: true
   });
+
+export const getMyExpenses = () =>
+axios.get(
+  `${REST_API_EXPENSE_URL}/my-expenses`,
+  {
+    withCredentials:true
+  }
+);

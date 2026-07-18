@@ -10,7 +10,7 @@ import {
 
 // EXPENSE APIs
 import {
-  getRecentExpenses,
+  getExpensesByUser,
   createExpense,
   deleteExpense
 } from "../services/ExpenseService";
@@ -19,6 +19,8 @@ import {
 const ExpensePage = () => {
 
   // ================= EXPENSE STATE =================
+  const [selectedRejectionReason, setSelectedRejectionReason] = useState(null);
+  
   const [expenses, setExpenses] = useState([]);
 
   const [formData, setFormData] = useState({
@@ -39,7 +41,7 @@ const ExpensePage = () => {
   // ================= FETCH DATA =================
   useEffect(() => {
     fetchCategories();
-    fetchRecentExpenses();
+    fetchExpenses();
   }, []);
 
   const fetchCategories = () => {
@@ -52,8 +54,8 @@ const ExpensePage = () => {
       });
   };
 
-  const fetchRecentExpenses = () => {
-    getRecentExpenses()
+  const fetchExpenses  = () => {
+    getExpensesByUser()
       .then((res) => {
         console.table(
           res.data.map(e => ({
@@ -105,7 +107,7 @@ const ExpensePage = () => {
 
     createExpense(expensePayload)
       .then(() => {
-        fetchRecentExpenses(); // refresh table
+        fetchExpenses(); // refresh table
 
         setFormData({
           title: "",
@@ -165,6 +167,15 @@ const ExpensePage = () => {
           err
         );
       });
+  };
+
+  const showRejectionReason = (reason) => {
+    setSelectedRejectionReason(reason);
+  };
+
+
+  const closeRejectionReason = () => {
+    setSelectedRejectionReason(null);
   };
 
   return (
@@ -243,6 +254,7 @@ const ExpensePage = () => {
               <th>Amount</th>
               <th>Category</th>
               <th>Date</th>
+              <th>Status</th>
               <th>Delete</th>
             </tr>
           </thead>
@@ -262,6 +274,33 @@ const ExpensePage = () => {
                       year: "numeric",
                       timeZone: "UTC",
                     }).format(new Date(exp.date))}
+                  </td>
+                  <td>
+                  {
+                  exp.status === "PENDING" && 
+                  <span className="pendingBadge">
+                  🟡 Pending
+                  </span>
+                  }
+
+                  {
+                  exp.status === "APPROVED" &&
+                  <span className="approvedBadge">
+                  🟢 Approved
+                  </span>
+                  }
+
+                  {
+                    exp.status === "REJECTED" &&
+
+                    <span
+                      className={styles.rejectedBadge}
+                      onClick={() => showRejectionReason(exp.rejectionReason)}
+                      style={{cursor:"pointer"}}
+                    >
+                      🔴 Rejected
+                    </span>
+                  }
                   </td>
                   <td>
                     <button
@@ -353,6 +392,26 @@ const ExpensePage = () => {
           </tbody>
         </table>
       </div>
+
+      {
+        selectedRejectionReason && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.reasonModal}>
+            <h3>
+              Rejection Reason
+            </h3>
+            <p>
+              {selectedRejectionReason}
+            </p>
+            <button
+              onClick={closeRejectionReason}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+        )
+      }
 
     </div>
   );

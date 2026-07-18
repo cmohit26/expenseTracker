@@ -40,11 +40,11 @@ public class Expense {
     @Temporal(TemporalType.DATE)
     private LocalDate date;
 
-    //ENUM
+    //ENUMa
     @Enumerated(EnumType.STRING)
     private ApprovalStatus status;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String rejectionReason;
 
     public ApprovalStatus getStatus() {

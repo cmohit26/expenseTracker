@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react';
-// App: Root component controlling navigation, auth state, and modals.
+
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
+
 import UsersTable from './components/UsersTable';
 import UserEditModal from './components/UserEditModal';
 import UsersSortModal from './components/UsersSortModal';
+
 import DashboardPage from './components/DashboardPage.jsx';
 import IncomePage from './components/IncomePage';
-import AuthPage from './components/AuthPage';
 import ExpensePage from './components/ExpensePage';
+import AuthPage from './components/AuthPage';
+
+import AdminPage from './components/AdminPage';
+import MyRequestsPage from './components/MyRequestsPage';
+
 import { getCurrentUser } from './services/UserServices';  // Import the API call
 import { logoutUser } from './services/UserServices';  // Ensure correct import
 
@@ -97,6 +103,12 @@ function App() {
 
     case 'expense':   // ⭐ ADD THIS BLOCK
       return <ExpensePage />;
+
+    case 'admin':
+      return <AdminPage />;
+
+    case 'requests':
+      return <MyRequestsPage />;
 
     default:
       return <DashboardPage />

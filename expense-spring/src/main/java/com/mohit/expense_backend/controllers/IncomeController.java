@@ -26,9 +26,7 @@ public class IncomeController {
 
     @PostMapping
     public Income addIncome(
-            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestBody IncomeRequestDTO dto) {
-        User user = userPrincipal.getUser();
         return incomeService.addIncome(dto);
     }
 

@@ -32,6 +32,7 @@ public class IncomeService {
         income.setSource(dto.getSource());
         income.setDate(LocalDate.parse(dto.getDate()));
         income.setUser(user);
+        income.setStatus(ApprovalStatus.PENDING);
 
         return incomeRepository.save(income);
     }
