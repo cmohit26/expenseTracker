@@ -8,6 +8,7 @@ import com.mohit.expense_backend.Repositories.CategoryRepository;
 import com.mohit.expense_backend.Repositories.ExpenseRepository;
 import com.mohit.expense_backend.Security.CurrentUserService;
 import com.mohit.expense_backend.dto.ExpenseDTO;
+import com.mohit.expense_backend.dto.PendingExpenseDTO;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -99,8 +100,22 @@ public class ExpenseService {
                 .orElseThrow(() -> new RuntimeException("Expense not found"));
     }
 
-    public List<Expense> findPendingExpenses() {
-        return expenseRepository.findByStatus(ApprovalStatus.PENDING);
+    public List<PendingExpenseDTO> findPendingExpenses() {
+
+        return expenseRepository.findByStatus(ApprovalStatus.PENDING)
+                .stream()
+                .map(expense -> new PendingExpenseDTO(
+                        expense.getId(),
+                        expense.getTitle(),
+                        expense.getAmount(),
+                        expense.getDate(),
+                        expense.getUser().getFirstName(),
+                        expense.getUser().getLastName(),
+                        expense.getCategory().getName(),
+                        expense.getStatus(),
+                        expense.getRejectionReason()
+                ))
+                .toList();
     }
 
     public Expense approveExpense(int id) {

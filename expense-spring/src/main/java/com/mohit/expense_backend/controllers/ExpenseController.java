@@ -3,6 +3,7 @@ import com.mohit.expense_backend.Entities.Enums.ApprovalStatus;
 import com.mohit.expense_backend.Entities.Expense;
 import com.mohit.expense_backend.Services.ExpenseServices.ExpenseService;
 import com.mohit.expense_backend.dto.ExpenseDTO;
+import com.mohit.expense_backend.dto.PendingExpenseDTO;
 import com.mohit.expense_backend.dto.RejectionRequestDTO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -70,7 +71,7 @@ public class ExpenseController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/pending-expenses")
-    public List<Expense> getPendingExpenses() {
+    public List<PendingExpenseDTO> getPendingExpenses() {
         return expenseService.findPendingExpenses();
     }
 

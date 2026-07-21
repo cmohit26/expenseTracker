@@ -20,6 +20,13 @@ public interface IncomeRepository extends JpaRepository<Income, Integer> {
        """)
     Double getTotalIncome(Integer userId);
 
+    @Query("""
+        SELECT i
+        FROM Income i
+        JOIN FETCH i.user
+        WHERE i.status = :status
+        ORDER BY i.date DESC
+        """)
     List<Income> findByStatus(ApprovalStatus status);
 
 }

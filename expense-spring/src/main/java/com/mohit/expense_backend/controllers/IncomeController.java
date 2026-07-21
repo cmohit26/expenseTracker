@@ -5,6 +5,7 @@ import com.mohit.expense_backend.Security.UserPrincipal;
 import com.mohit.expense_backend.Services.IncomeService;
 import com.mohit.expense_backend.Entities.User;
 import com.mohit.expense_backend.dto.IncomeRequestDTO;
+import com.mohit.expense_backend.dto.PendingIncomeDTO;
 import com.mohit.expense_backend.dto.RejectionRequestDTO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -50,7 +51,7 @@ public class IncomeController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/pending-incomes")
-    public List<Income> getPendingIncomes() {
+    public List<PendingIncomeDTO> getPendingIncomes() {
         return incomeService.findPendingIncomes();
     }
 

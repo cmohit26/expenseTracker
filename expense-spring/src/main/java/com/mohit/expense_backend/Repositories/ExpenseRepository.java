@@ -33,6 +33,14 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
        """)
     Double getTotalExpenses(Integer userId);
 
+    @Query("""
+        SELECT DISTINCT e
+        FROM Expense e
+        JOIN FETCH e.user
+        JOIN FETCH e.category
+        WHERE e.status = :status
+        ORDER BY e.date DESC
+        """)
     List<Expense> findByStatus(ApprovalStatus status);
 
 }

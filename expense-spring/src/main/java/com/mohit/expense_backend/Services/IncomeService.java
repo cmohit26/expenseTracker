@@ -7,6 +7,7 @@ import com.mohit.expense_backend.Entities.User;
 import com.mohit.expense_backend.Repositories.UserRepository;
 import com.mohit.expense_backend.Security.CurrentUserService;
 import com.mohit.expense_backend.dto.IncomeRequestDTO;
+import com.mohit.expense_backend.dto.PendingIncomeDTO;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -62,8 +63,21 @@ public class IncomeService {
         incomeRepository.deleteById(incomeId);
     }
 
-    public List<Income> findPendingIncomes() {
-        return incomeRepository.findByStatus(ApprovalStatus.PENDING);
+    public List<PendingIncomeDTO> findPendingIncomes() {
+
+        return incomeRepository.findByStatus(ApprovalStatus.PENDING)
+                .stream()
+                .map(income -> new PendingIncomeDTO(
+                        income.getId().intValue(),
+                        income.getSource(),
+                        income.getAmount(),
+                        income.getDate(),
+                        income.getUser().getFirstName(),
+                        income.getUser().getLastName(),
+                        income.getStatus(),
+                        income.getRejectionReason()
+                ))
+                .toList();
     }
 
     public Income approveIncome(int id) {

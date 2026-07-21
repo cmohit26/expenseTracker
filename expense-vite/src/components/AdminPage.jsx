@@ -153,10 +153,10 @@ const AdminPage = () => {
                   <td>{index + 1}</td>
                   <td>{expense.title}</td>
                   <td>
-                    {expense.user?.firstName} {expense.user?.lastName}
+                    {expense.userFirstName} {expense.userLastName}
                   </td>
                   <td>
-                    {expense.category?.name}
+                    {expense.categoryName}
                   </td>
                   <td>
                     ₹ {Number(expense.amount).toLocaleString()}
@@ -230,12 +230,12 @@ const AdminPage = () => {
               pendingIncomes.map((income, index) => (
                 <tr key={income.id}>
                   <td>{index + 1}</td>
-                  <td>{income.title}</td>
+                  <td>{income.source}</td>
                   <td>
-                    {income.user?.firstName} {income.user?.lastName}
+                    {income.userFirstName} {income.userLastName}
                   </td>
                   <td>
-                    {income.category?.name}
+                    {income.categoryName}
                   </td>
                   <td>
                     ₹ {Number(income.amount).toLocaleString()}

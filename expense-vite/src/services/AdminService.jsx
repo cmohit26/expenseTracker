@@ -1,19 +1,20 @@
 import axios from "axios";
 
-const REST_API_ADMIN_URL = "http://localhost:8080/v1/admin";
+const EXPENSE_URL = "http://localhost:8080/v1/expense";
+const INCOME_URL = "http://localhost:8080/v1/income";
 
 // =========== EXPENSE REQUESTS
 
 // Get all pending expenses
 export const getPendingExpenses = () =>
-  axios.get(`${REST_API_ADMIN_URL}/pending-expenses`, {
+  axios.get(`${EXPENSE_URL}/pending-expenses`, {
     withCredentials: true,
   });
 
 // Approve an expense
 export const approveExpense = (id) =>
   axios.put(
-    `${REST_API_ADMIN_URL}/approve-expense/${id}`,
+    `${EXPENSE_URL}/approve-expense/${id}`,
     {},
     {
       withCredentials: true,
@@ -23,7 +24,7 @@ export const approveExpense = (id) =>
 // Reject an expense
 export const rejectExpense = (id, reason) =>
   axios.put(
-    `${REST_API_ADMIN_URL}/reject-expense/${id}`,
+    `${EXPENSE_URL}/reject-expense/${id}`,
     {
       reason: reason,
     },
@@ -36,14 +37,14 @@ export const rejectExpense = (id, reason) =>
 
 // Get all pending incomes
 export const getPendingIncomes = () =>
-  axios.get(`${REST_API_ADMIN_URL}/pending-incomes`, {
+  axios.get(`${INCOME_URL}/pending-incomes`, {
     withCredentials: true,
   });
 
 // Approve an income
 export const approveIncome = (id) =>
   axios.put(
-    `${REST_API_ADMIN_URL}/approve-income/${id}`,
+    `${INCOME_URL}/approve-income/${id}`,
     {},
     {
       withCredentials: true,
@@ -53,7 +54,7 @@ export const approveIncome = (id) =>
 // Reject an income
 export const rejectIncome = (id, reason) =>
   axios.put(
-    `${REST_API_ADMIN_URL}/reject-income/${id}`,
+    `${INCOME_URL}/reject-income/${id}`,
     {
       reason: reason,
     },
