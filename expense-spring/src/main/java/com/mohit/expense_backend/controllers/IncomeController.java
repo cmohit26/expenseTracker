@@ -7,6 +7,7 @@ import com.mohit.expense_backend.Entities.User;
 import com.mohit.expense_backend.dto.IncomeRequestDTO;
 import com.mohit.expense_backend.dto.PendingIncomeDTO;
 import com.mohit.expense_backend.dto.RejectionRequestDTO;
+import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,7 +28,7 @@ public class IncomeController {
 
     @PostMapping
     public Income addIncome(
-            @RequestBody IncomeRequestDTO dto) {
+            @RequestBody @Valid IncomeRequestDTO dto) {
         return incomeService.addIncome(dto);
     }
 

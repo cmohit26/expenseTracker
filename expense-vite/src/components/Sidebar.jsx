@@ -1,113 +1,167 @@
-import React from 'react';
-import styles from './Sidebar.module.css';
+import React from "react";
+import styles from "./Sidebar.module.css";
 
-// Sidebar: App navigation for dashboard and admin pages. Collapsible on mobile.
-
-const Sidebar = ({currentUser, onNavigate, currentPage}) => {
-  // Toggle sidebar visibility on small screens
-  const w3_open = () => {
-    const mySidebar = document.getElementById("mySidebar");
-    const overlayBg = document.getElementById("myOverlay");
-    if (mySidebar.style.display === 'block') {
-      mySidebar.style.display = 'none';
-      overlayBg.style.display = "none";
-    } else {
-      mySidebar.style.display = 'block';
-      overlayBg.style.display = "block";
-    }
-  };
+const Sidebar = ({ currentUser, onNavigate, currentPage }) => {
+  const isAdmin = currentUser?.roles === "ROLE_ADMIN";
 
   const w3_close = () => {
     const mySidebar = document.getElementById("mySidebar");
     const overlayBg = document.getElementById("myOverlay");
+
     mySidebar.style.display = "none";
     overlayBg.style.display = "none";
   };
 
-  // Navigate and close sidebar (mobile UX)
   const handleNavigation = (page) => {
     onNavigate(page);
-    w3_close(); // Close sidebar on mobile after navigation
+    w3_close();
   };
 
   return (
     <>
-      <div id="myOverlay" className="w3-overlay w3-hide-large w3-animate-opacity" onClick={w3_close} style={{ cursor: 'pointer' }}></div>
-      <nav className={`w3-sidebar w3-collapse w3-white w3-animate-left ${styles.sidebar}`} id="mySidebar">
+      <div
+        id="myOverlay"
+        className="w3-overlay w3-hide-large w3-animate-opacity"
+        onClick={w3_close}
+        style={{ cursor: "pointer" }}
+      ></div>
+
+      <nav
+        className={`w3-sidebar w3-collapse w3-white w3-animate-left ${styles.sidebar}`}
+        id="mySidebar"
+      >
         <br />
-        <div className="w3-container w3-row">
-          <div className="w3-col s4">
-            <img src="/w3images/avatar2.png" className="w3-circle w3-margin-right" style={{ width: '46px' }} alt="Avatar" />
-          </div>
-          <div className="w3-col s8 w3-bar">
-            <span> Welcome, 
-              <strong>
-                {currentUser ? currentUser.firstName || currentUser.email || 'User' : 'Guest'}
-              </strong>
-            </span>
-            <a href="#" className="w3-bar-item w3-button"><i className="fa fa-envelope"></i></a>
-            <a href="#" className="w3-bar-item w3-button"><i className="fa fa-user"></i></a>
-            <a href="#" className="w3-bar-item w3-button"><i className="fa fa-cog"></i></a>
-          </div>
+
+        {/* User Info */}
+        <div className={styles.userHeader}>
+          <i className={`fa-solid fa-circle-user ${styles.userIcon}`}></i>
+
+          <span className={styles.panelBadge}>
+            {isAdmin ? "ADMIN PANEL" : "USER PANEL"}
+          </span>
+
+          <p className={styles.welcomeText}>
+            Welcome,
+            <br />
+            <strong>
+              {currentUser
+                ? currentUser.firstName || currentUser.email
+                : "Guest"}
+            </strong>
+          </p>
         </div>
+
         <hr />
+
         <div className="w3-container">
-          <h5>Dashboard</h5>
+          <h5>{isAdmin ? "Administration" : "Dashboard"}</h5>
         </div>
+
+
         <div className="w3-bar-block">
-          <a href="#" className="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onClick={w3_close} title="close menu">
-            <i className="fa fa-remove fa-fw"></i> Close Menu
-          </a>
-                  
+
+          {/* Mobile close */}
           <a
             href="#"
-            className={`w3-bar-item w3-button w3-padding ${ currentPage === 'dashboard' ? 'w3-blue' : ''}`}
-            onClick={() => handleNavigation('dashboard')}
+            className="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black"
+            onClick={w3_close}
           >
-            <i className="fa-solid fa-chart-line"></i> User Dashboard
+            <span className={styles.menuIcon}>
+              <i className="fa fa-remove"></i>
+            </span>
+            <span>Close Menu</span>
           </a>
 
-          {currentUser?.roles === "ROLE_ADMIN" && (
-            <a
+
+          {/* Dashboard */}
+          <a
             href="#"
             className={`w3-bar-item w3-button w3-padding ${
-              currentPage === "users" ? "w3-blue" : ""
+              currentPage === "dashboard" ? "w3-blue" : ""
             }`}
-              onClick={() => handleNavigation("users")}
-            >
-              <i className="fa fa-lock"></i> ADMIN Information
-            </a>
+            onClick={() => handleNavigation("dashboard")}
+          >
+            <span className={styles.menuIcon}>
+              <i className="fa-solid fa-chart-line"></i>
+            </span>
+
+            <span>Dashboard</span>
+          </a>
+
+
+          {/* Income */}
+          <a
+            href="#"
+            className={`w3-bar-item w3-button w3-padding ${
+              currentPage === "income" ? "w3-blue" : ""
+            }`}
+            onClick={() => handleNavigation("income")}
+          >
+            <span className={styles.menuIcon}>
+              <i className="fa-solid fa-dollar-sign"></i>
+            </span>
+
+            <span>Income</span>
+          </a>
+
+
+          {/* Expenses */}
+          <a
+            href="#"
+            className={`w3-bar-item w3-button w3-padding ${
+              currentPage === "expense" ? "w3-blue" : ""
+            }`}
+            onClick={() => handleNavigation("expense")}
+          >
+            <span className={styles.menuIcon}>
+              <i className="fa fa-credit-card"></i>
+            </span>
+
+            <span>Expenses</span>
+          </a>
+
+
+          {/* Admin Section */}
+          {isAdmin && (
+            <div className={styles.adminSection}>
+
+              <div className={styles.adminTitle}>
+                Administrator
+              </div>
+
+
+              <a
+                href="#"
+                className={`w3-bar-item w3-button w3-padding ${
+                  currentPage === "users" ? "w3-blue" : ""
+                }`}
+                onClick={() => handleNavigation("users")}
+              >
+                <span className={styles.menuIcon}>
+                  <i className="fa fa-lock"></i>
+                </span>
+
+                <span>Admin Information</span>
+              </a>
+
+
+              <a
+                href="#"
+                className={`w3-bar-item w3-button w3-padding ${
+                  currentPage === "admin" ? "w3-blue" : ""
+                }`}
+                onClick={() => handleNavigation("admin")}
+              >
+                <span className={styles.menuIcon}>
+                  <i className="fa fa-check-circle"></i>
+                </span>
+
+                <span>Admin Approval</span>
+              </a>
+
+            </div>
           )}
 
-          {currentUser?.roles === "ROLE_ADMIN" && (
-            <a
-              href="#"
-              className={`w3-bar-item w3-button w3-padding ${
-                currentPage === 'admin' ? 'w3-blue' : ''
-              }`}
-              onClick={() => handleNavigation('admin')}
-            >
-              <i className="fa fa-check-circle"></i>
-              Admin Approval
-            </a>
-          )}
-          
-          <a 
-            href="#" 
-            className={`w3-bar-item w3-button w3-padding ${currentPage === 'income' ? 'w3-blue' : ''}`}
-            onClick={() => handleNavigation('income')}
-          >
-            <i className="fa-solid fa-dollar-sign"></i>  Income
-          </a>
-          
-          <a 
-            href="#" 
-            className={`w3-bar-item w3-button w3-padding ${currentPage === 'expense' ? 'w3-blue' : ''}`}
-            onClick={() => handleNavigation('expense')}
-          >
-            <i className="fa fa-credit-card"></i> Expenses
-          </a>
-        
         </div>
       </nav>
     </>

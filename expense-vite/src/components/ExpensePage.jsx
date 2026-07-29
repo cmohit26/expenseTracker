@@ -98,6 +98,25 @@ const ExpensePage = () => {
   const handleSubmitExpense = (e) => {
     e.preventDefault();
 
+    let errors = [];
+    // Title validation
+    if (formData.title.trim().length > 20) {
+      errors.push("Expense title cannot exceed 20 characters");
+    }
+    // Amount validation
+    const amount = Number(formData.amount);
+    if (amount > 1000000) {
+      errors.push("Amount cannot exceed ₹1,000,000");
+    }
+    // Show all errors together
+    if (errors.length > 0) {
+      alert(
+        "Please fix the following errors:\n\n" +
+        errors.map((err, index) => `${index + 1}. ${err}`).join("\n")
+      );
+      return;
+    }
+
     const expensePayload = {
       title: formData.title,
       amount: formData.amount,
@@ -207,6 +226,7 @@ const ExpensePage = () => {
             value={formData.amount}
             onChange={handleChange}
             step={100}
+            min="0"
             required
           />
 

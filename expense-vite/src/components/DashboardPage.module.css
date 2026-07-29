@@ -56,26 +56,38 @@
 }
 
 .categoryBar {
-  display: flex;
+  display: grid;
+  grid-template-columns: 140px 1fr;
   align-items: center;
   gap: 15px;
 }
 
 .categoryName {
-  min-width: 100px;
   font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .barContainer {
-  flex: 1;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
+  width: 100%;
+}
+
+.barBackground {
+  flex: 1;
+  height: 18px;
+  background: #ececec;
+  border-radius: 999px;
+  overflow: hidden;
 }
 
 .bar {
-  height: 20px;
-  border-radius: 10px;
+  height: 100%;
+  border-radius: inherit;
+  transition: width .4s ease;
 }
 
 .greenBar {
@@ -94,10 +106,47 @@
   background: linear-gradient(90deg, #2196f3, #64b5f6);
 }
 
+.purpleBar {
+  background: linear-gradient(90deg, #9c27b0, #ba68c8);
+}
+
+.tealBar {
+  background: linear-gradient(90deg, #009688, #4db6ac);
+}
+
+.pinkBar {
+  background: linear-gradient(90deg, #e91e63, #f06292);
+}
+
+.yellowBar {
+  background: linear-gradient(90deg, #fbc02d, #fff176);
+}
+
+.percentageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 90px;
+}
+
+.categoryInfo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 120px;
+}
+
+
 .percentage {
-  min-width: 50px;
-  text-align: right;
-  font-weight: 500;
+  font-weight: 600;
+  color: #333;
+}
+
+
+.amount {
+  color: #666;
+  font-size: 13px;
+  white-space: nowrap;
 }
 
 /* Table */

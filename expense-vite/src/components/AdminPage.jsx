@@ -32,16 +32,11 @@ const AdminPage = () => {
       getPendingIncomes()
     ])
       .then(([expenseResponse, incomeResponse]) => {
-
         setPendingExpenses(expenseResponse.data);
-
         setPendingIncomes(incomeResponse.data);
-
       })
       .catch((error) => {
-
         console.error("Error loading pending requests:", error);
-
       })
       .finally(() => {
         setLoading(false);

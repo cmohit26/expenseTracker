@@ -16,6 +16,16 @@ public class DashboardDTO {
 
     private List<YearlyExpenseDTO> yearlyExpenses;
 
+    private List<CategoryExpenseDTO> categoryExpenses;
+
+    public List<CategoryExpenseDTO> getCategoryExpenses() {
+        return categoryExpenses;
+    }
+
+    public void setCategoryExpenses(List<CategoryExpenseDTO> categoryExpenses) {
+        this.categoryExpenses = categoryExpenses;
+    }
+
     public List<YearlyExpenseDTO> getYearlyExpenses() {
         return yearlyExpenses;
     }

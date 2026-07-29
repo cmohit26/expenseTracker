@@ -42,9 +42,11 @@ public class DashboardService {
         //FOR THE MONTHLY CHART (Monthly Expense)
         dto.setMonthlyExpenses(expenseAnalyticsService.getMonthlyExpenseChart());
 
-        //FOR THE MONTHLY CHART (Monthly Expense)
+        //FOR THE Yearly CHART (Yearly Expense)
         dto.setYearlyExpenses(expenseAnalyticsService.getYearlyExpenseChart());
 
+        //For the Category Bar Color Chart
+        dto.setCategoryExpenses(expenseAnalyticsService.getCategoryExpenseBreakdown());
 
         return dto;
     }

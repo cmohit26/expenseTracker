@@ -10,16 +10,21 @@ function DashboardPage({ onNavigate }) {
   // const monthlyExpenseData = dashboard?.monthlyExpenses || [];
 
   // For Dynamic Category Expense Bars
-  const categoryExpenseData = [
-    { name: "Food", percentage: 79, color: "greenBar" },
-    { name: "Clothes", percentage: 31, color: "orangeBar" },
-    { name: "Travel", percentage: 20, color: "redBar" },
-    { name: "Stationary", percentage: 8, color: "blueBar" },
+  const BAR_COLORS = [
+    "greenBar",
+    "orangeBar",
+    "redBar",
+    "blueBar",
+    "purpleBar",
+    "tealBar",
+    "pinkBar",
+    "yellowBar"
   ];
   
   
   // Navigate and close sidebar (mobile UX)
   const handleNavigation = (page) => {
+    console.log("Navigating to:", page);
     if (onNavigate) onNavigate(page);
   };
   
@@ -263,24 +268,41 @@ function DashboardPage({ onNavigate }) {
           <h3>Expense Categories</h3>
           {dashboard ? (
             <div className={styles.categoryBars}>
-              {categoryExpenseData.map((category) => (
-                <div key={category.name} className={styles.categoryBar}>
-                  <span className={styles.categoryName}>
-                    {category.name}
-                  </span>
-
-                  <div className={styles.barContainer}>
-                    <div
-                      className={`${styles.bar} ${styles[category.color]}`}
-                      style={{ width: `${category.percentage}%` }}
-                    />
-
-                    <span className={styles.percentage}>
-                      {category.percentage}%
+              {dashboard?.categoryExpenses?.length > 0 ? (
+                dashboard.categoryExpenses.map((category, index) => (
+                  <div
+                    key={category.name}
+                    className={styles.categoryBar} >
+                    <span className={styles.categoryName}>
+                      {category.name}
                     </span>
+                    <div className={styles.barContainer}>
+                      <div className={styles.barBackground}>
+                        <div
+                          className={`${styles.bar} ${
+                            styles[BAR_COLORS[index % BAR_COLORS.length]]
+                          }`}
+                          style={{
+                            width: `${category.percentage}%`
+                          }}
+                        />
+                      </div>
+                      <div className={styles.categoryInfo}>
+                        <span className={styles.percentage}>
+                          {category.percentage.toFixed(1)}%
+                        </span>
+                        <span className={styles.amount}>
+                          ₹{category.amount.toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
                   </div>
+                ))
+              ) : (
+                <div className={styles.emptyState}>
+                  No expense categories found.
                 </div>
-              ))}
+              )}
             </div>
           ) : (
             <div className={styles.emptyState}>
@@ -328,6 +350,12 @@ function DashboardPage({ onNavigate }) {
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
         </h5>
 
+        <h4><i className="fa-solid fa-history"></i> Repeated Income</h4>
+        <h5>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          Add a Repetitive Income Bracket Like (Montlhy Salary)<br/><br/>
+        </h5>
+        
         <h4><i className="fa-solid fa-search"></i> Search and Filter</h4>
         <h5>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

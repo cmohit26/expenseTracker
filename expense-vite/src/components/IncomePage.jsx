@@ -47,6 +47,27 @@ function IncomePage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // ---------- FRONTEND VALIDATION ----------
+    let errors = [];
+    // Source validation
+    if (!formData.source.trim()) {
+      errors.push("Income source is required");
+    } else if (formData.source.trim().length > 20) {
+      errors.push("Income source cannot exceed 20 characters");
+    }
+    // Amount validation
+    const amount = Number(formData.amount);
+    if (!formData.amount) {
+      errors.push("Amount is required");
+    } else if (amount > 1000000) {
+      errors.push("Amount cannot exceed Rs. 1,000,000");
+    }
+    // Show all errors together
+    if (errors.length > 0) {
+      alert(errors.join("\n"));
+      return;
+    }
+
     try {
       if (editId) {
         await updateIncome(editId, formData);
@@ -86,6 +107,16 @@ function IncomePage() {
       date: income.date,
     });
     setEditId(income.id);
+  };
+
+  const handleCancelEdit = () => {
+    setFormData({
+      amount: "",
+      source: "",
+      date: "",
+    });
+
+    setEditId(null);
   };
 
   const showRejectionReason = (reason) => {
@@ -223,16 +254,31 @@ function IncomePage() {
               name="amount"
               value={formData.amount}
               onChange={handleChange}
+              step={100}
+              min="0"
+              Required
             />
           </div>
 
-          <button
-            type="submit"
-            className="w3-button w3-blue w3-round-large"
-            style={{ width: "100%" }}
-          >
-            {editId ? "Update Income" : "Submit Income"}
-          </button>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button
+              type="submit"
+              className="w3-button w3-blue w3-round-large"
+              style={{ width: "100%" }}
+            >
+              {editId ? "Update Income" : "Submit Income"}
+            </button>
+            {editId && (
+              <button
+                type="button"
+                className="w3-button w3-red w3-round-large"
+                style={{ width: "100%" }}
+                onClick={handleCancelEdit}
+              >
+                Cancel
+              </button>
+            )}
+          </div>
         </form>
       </div>
 

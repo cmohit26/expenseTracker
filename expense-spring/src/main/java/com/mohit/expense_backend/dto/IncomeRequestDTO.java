@@ -1,5 +1,10 @@
 package com.mohit.expense_backend.dto;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+
+@Valid
 public class IncomeRequestDTO {
     private Double amount;
     private String source;
