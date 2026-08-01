@@ -5,6 +5,7 @@ import com.mohit.expense_backend.Services.ExpenseServices.ExpenseService;
 import com.mohit.expense_backend.dto.ExpenseDTO;
 import com.mohit.expense_backend.dto.PendingExpenseDTO;
 import com.mohit.expense_backend.dto.RejectionRequestDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +31,10 @@ public class ExpenseController {
 
     // Get all expenses of user
     @GetMapping
-    public List<Expense> getExpensesByUser() {
-        return expenseService.getExpensesByUser();
+    public Page<Expense> getExpensesByUser(
+            @RequestParam(defaultValue="0") int page,
+            @RequestParam(defaultValue="10") int size ){
+        return expenseService.getExpensesByUser( page, size );
     }
 
     // Get recent 10

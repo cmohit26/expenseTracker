@@ -21,7 +21,11 @@ const ExpensePage = () => {
   // ================= EXPENSE STATE =================
   const [selectedRejectionReason, setSelectedRejectionReason] = useState(null);
   
-  const [expenses, setExpenses] = useState([]);
+  const [expenses,setExpenses]=useState([]);
+  const [currentPage,setCurrentPage]=useState(0);
+  const [totalPages,setTotalPages]=useState(0);
+  const [totalExpenses,setTotalExpenses]=useState(0);
+  const pageSize=10;
 
   const [formData, setFormData] = useState({
     title: "",
@@ -54,38 +58,40 @@ const ExpensePage = () => {
       });
   };
 
-  const fetchExpenses  = () => {
-    getExpensesByUser()
-      .then((res) => {
-        console.table(
-          res.data.map(e => ({
-            id: e.id,
-            title: e.title,
-            date: e.date
-          }))
-        );
-        setExpenses(res.data);
-      })
-      .catch((err) => {
-        console.error("Error fetching expenses:", err);
-      });
-    };
-
-    const handleCategoryDeleteClick = (categoryId) => {
-      const confirmDelete = window.confirm(
-        "Are you sure you want to delete this category?"
+  const fetchExpenses = (page=0)=>{
+    getExpensesByUser(page,pageSize)
+    .then((res)=>{
+      setExpenses(res.data.content);
+      setTotalPages(
+          res.data.totalPages
       );
+      setTotalExpenses(
+          res.data.totalElements
+      );
+      setCurrentPage(
+          res.data.number
+      );
+    })
+    .catch((err)=>{
+        console.error(err);
+    });
+  };
 
-      if (confirmDelete) {
-        deleteCategory(categoryId)
-          .then(() => {
-            fetchCategories(); // Refresh the table
-          })
-          .catch((err) => {
-            console.error("Error deleting category:", err);
-          });
-      }
-    };
+  const handleCategoryDeleteClick = (categoryId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this category?"
+    );
+
+    if (confirmDelete) {
+      deleteCategory(categoryId)
+        .then(() => {
+          fetchCategories(); // Refresh the table
+        })
+        .catch((err) => {
+          console.error("Error deleting category:", err);
+        });
+    }
+  };
     
   // ================= EXPENSE HANDLERS =================
   const handleChange = (e) => {
@@ -125,19 +131,19 @@ const ExpensePage = () => {
     };
 
     createExpense(expensePayload)
-      .then(() => {
-        fetchExpenses(); // refresh table
+    .then(() => {
+      fetchExpenses(); // refresh table
 
-        setFormData({
-          title: "",
-          amount: "",
-          category: "",
-          date: ""
-        });
-      })
-      .catch((err) => {
-        console.error("Error adding expense:", err);
+      setFormData({
+        title: "",
+        amount: "",
+        category: "",
+        date: ""
       });
+    })
+    .catch((err) => {
+      console.error("Error adding expense:", err);
+    });
   };
 
   const handleExpenseDeleteClick = (expenseId) => {
@@ -265,7 +271,14 @@ const ExpensePage = () => {
 
       {/* Expense Table */}
       <div className={styles.tableContainer}>
-        <h3>Recent Expenses</h3>
+        <div className={styles.tableHeader}>
+          {/* <h3> Expenses </h3> */}
+          {/* <p> Showing {expenses.length} of {totalExpenses} expenses </p> */}
+          <h3>Expenses</h3>
+          <p>
+            Showing {expenses.length > 0 ? currentPage * pageSize + 1 : 0} - {Math.min((currentPage + 1) * pageSize, totalExpenses)} {" "} of {totalExpenses} expenses
+          </p>
+        </div>
         <table className={styles.table}>
           <thead>
             <tr>
@@ -345,6 +358,44 @@ const ExpensePage = () => {
             )}
           </tbody>
         </table>
+
+        {/* Pagination Controls */}
+        <div className={styles.pagination}>
+          <button disabled={currentPage===0} onClick={()=> fetchExpenses(currentPage-1)}>
+            &lt; Previous
+          </button>
+
+          {
+            Array.from(
+            {length:totalPages},
+            (_,index)=>index
+            )
+            .slice(
+            Math.max(0,currentPage-2),
+            currentPage+3
+            )
+            .map(page=>(
+            <button
+            key={page}
+            className={
+            currentPage===page
+            ? styles.activePage
+            : ""
+            }
+            onClick={()=>
+            fetchExpenses(page)
+            }
+            >
+            {page+1}
+            </button>
+            ))
+          }
+
+          <button disabled={currentPage===totalPages-1} onClick={()=> fetchExpenses(currentPage+1) }>
+          Next &gt;
+          </button>
+
+        </div>
       </div>
 
 

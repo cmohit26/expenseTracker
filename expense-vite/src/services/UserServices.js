@@ -8,9 +8,18 @@ const REST_API_CURRENT_USER_URL = "http://localhost:8080/currentUser";
 
 // CRUD helpers for user management
 export const getUserById = (id) => axios.get(`${REST_API_USER_URL}/${id}`);
-export const updateUser = (id, userData) => axios.put(`${REST_API_USER_URL}/${id}`, userData);
-export const deleteUser = (id) => axios.delete(`${REST_API_USER_URL}/${id}`);
-export const addUser = (addedUserData) => axios.post(REST_API_USER_URL, addedUserData);
+
+export const updateUser = (id, userData) => axios.put(`${REST_API_USER_URL}/${id}`, userData, {
+  withCredentials: true
+});
+
+export const deleteUser = (id) => axios.delete(`${REST_API_USER_URL}/${id}`, {
+  withCredentials: true
+});
+
+export const addUser = (addedUserData) => axios.post(REST_API_USER_URL, addedUserData, {
+  withCredentials: true
+});
 
 // Fetch all users (requires credentials for session auth)
 export const listOfUsers = () => axios.get(REST_API_GET_ALL_USERS_URL, {

@@ -2,6 +2,9 @@ package com.mohit.expense_backend.Services;
 
 
 import com.mohit.expense_backend.Entities.User;
+import com.mohit.expense_backend.Repositories.CategoryRepository;
+import com.mohit.expense_backend.Repositories.ExpenseRepository;
+import com.mohit.expense_backend.Repositories.IncomeRepository;
 import com.mohit.expense_backend.Repositories.UserRepository;
 import com.mohit.expense_backend.dto.UserRequestDTO;
 import com.mohit.expense_backend.dto.UserResponseDTO;
@@ -13,6 +16,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
@@ -25,6 +29,15 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ExpenseRepository expenseRepository;
+
+    @Autowired
+    private IncomeRepository incomeRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private final BCryptPasswordEncoder passwordEncoder;
@@ -91,9 +104,12 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User deleteUser(Integer id) {
+    @Transactional
+    public void deleteUser(Integer id) {
+        expenseRepository.deleteByUserId(id);
+        incomeRepository.deleteByUserId(id);
+        categoryRepository.deleteByUserId(id);
         userRepository.deleteById(id);
-        return null;
     }
 
     public List<UserResponseDTO> getSortedUsersBy(String field) {

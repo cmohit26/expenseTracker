@@ -231,8 +231,6 @@ option {
   z-index:999;
 }
 
-
-
 .reasonModal {
   background:white;
   padding:25px;
@@ -241,21 +239,15 @@ option {
   box-shadow:0 5px 20px rgba(0,0,0,0.3);
 }
 
-
-
 .reasonModal h3 {
   color:#c62828;
   margin-bottom:15px;
 }
 
-
-
 .reasonModal p {
   color:#333;
   margin-bottom:20px;
 }
-
-
 
 .reasonModal button {
   background:#2196F3;
@@ -264,4 +256,36 @@ option {
   padding:8px 20px;
   border-radius:5px;
   cursor:pointer;
+}
+
+/* ===================================PAGINATION======================================== */
+.tableHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.pagination{
+display:flex;
+justify-content:flex-end;
+gap:8px;
+margin-top:20px;
+}
+
+.pagination button{
+padding:6px 12px;
+border:none;
+background:#eee;
+cursor:pointer;
+border-radius:5px;
+}
+
+.pagination button:disabled{
+opacity:.5;
+cursor:not-allowed;
+}
+
+.activePage{
+background:#2196F3!important;
+color:white;
 }

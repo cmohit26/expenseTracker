@@ -9,7 +9,10 @@ import com.mohit.expense_backend.Repositories.ExpenseRepository;
 import com.mohit.expense_backend.Security.CurrentUserService;
 import com.mohit.expense_backend.dto.ExpenseDTO;
 import com.mohit.expense_backend.dto.PendingExpenseDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -47,9 +50,10 @@ public class ExpenseService {
         return expenseRepository.save(expense);
     }
 
-    public List<Expense> getExpensesByUser() {
+    public Page<Expense> getExpensesByUser(int page, int size ){
         Integer userId = currentUserService.getCurrentUserId();
-        return expenseRepository.findByUserIdOrderByDateDesc(userId);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("date").descending());
+        return expenseRepository.findByUserIdOrderByDateDesc(userId, pageable);
     }
 
     public List<Expense> getRecentExpenses() {

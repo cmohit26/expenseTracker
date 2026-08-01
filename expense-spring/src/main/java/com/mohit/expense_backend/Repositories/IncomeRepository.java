@@ -4,7 +4,9 @@ import com.mohit.expense_backend.Entities.Enums.ApprovalStatus;
 import com.mohit.expense_backend.Entities.Income;
 import com.mohit.expense_backend.Entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,5 +30,13 @@ public interface IncomeRepository extends JpaRepository<Income, Integer> {
         ORDER BY i.date DESC
         """)
     List<Income> findByStatus(ApprovalStatus status);
+
+    @Transactional              //So that it commits only when all the deletions are done
+    @Modifying
+    @Query("""
+        DELETE FROM Income i
+        WHERE i.user.id = :userId
+        """)
+    void deleteByUserId(Integer userId);        //For USER delete, fixing FK constraint
 
 }
