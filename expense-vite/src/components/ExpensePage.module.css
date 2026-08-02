@@ -289,3 +289,98 @@ cursor:not-allowed;
 background:#2196F3!important;
 color:white;
 }
+
+
+/* =================================== FILTER MODAL ======================================== */
+
+.filterButton{
+  background:#2196F3;
+  color:white;
+  border:none;
+  padding:8px 16px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:14px;
+  font-weight:500;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.filterButton:hover{
+  background:#1976D2;
+}
+
+.filterModal{
+  background:white;
+  width:420px;
+  max-width:90vw;
+  padding:25px;
+  border-radius:10px;
+  box-shadow:0 5px 20px rgba(0,0,0,0.3);
+}
+
+.filterModal h3{
+  margin:0 0 20px;
+  color:#333;
+}
+
+.filterSection{
+  margin-bottom:18px;
+}
+
+.filterSection label{
+  display:block;
+  margin-bottom:6px;
+  font-weight:600;
+  color:#444;
+}
+
+.filterSection select,
+.filterSection input{
+  width:100%;
+  padding:10px;
+  border:1px solid #ddd;
+  border-radius:6px;
+  font-size:14px;
+  box-sizing:border-box;
+}
+
+.filterSection select:focus,
+.filterSection input:focus{
+  outline:none;
+  border-color:#2196F3;
+}
+
+.dateInputs{
+  display:flex;
+  gap:10px;
+}
+
+.dateInputs input{
+  flex:1;
+}
+
+.modalButtons{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin-top:25px;
+}
+
+.cancelButton{
+  background:#e0e0e0 !important;
+  color:#333 !important;
+}
+
+.cancelButton:hover{
+  background:#d5d5d5 !important;
+}
+
+.applyButton{
+  background:#2196F3 !important;
+}
+
+.applyButton:hover{
+  background:#1976D2 !important;
+}

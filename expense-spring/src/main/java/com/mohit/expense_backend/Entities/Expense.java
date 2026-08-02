@@ -32,12 +32,10 @@ public class Expense {
     @Column(nullable = false)
     private Double amount;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @Temporal(TemporalType.DATE)
     private LocalDate date;
 
     //ENUMa

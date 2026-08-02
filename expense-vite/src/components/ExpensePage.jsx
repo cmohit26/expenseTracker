@@ -27,6 +27,16 @@ const ExpensePage = () => {
   const [totalExpenses,setTotalExpenses]=useState(0);
   const pageSize=10;
 
+  const [showFilter, setShowFilter] = useState(false);
+
+  const [filters, setFilters] = useState({
+    status: "",
+    categoryId: "",
+    startDate: "",
+    endDate: "",
+    sort: "DESC"
+  });
+
   const [formData, setFormData] = useState({
     title: "",
     amount: "",
@@ -59,7 +69,11 @@ const ExpensePage = () => {
   };
 
   const fetchExpenses = (page=0)=>{
-    getExpensesByUser(page,pageSize)
+    getExpensesByUser(
+      page,
+      pageSize,
+      filters
+    )
     .then((res)=>{
       setExpenses(res.data.content);
       setTotalPages(
@@ -170,7 +184,7 @@ const ExpensePage = () => {
       [e.target.name]: e.target.value
     });
   };
-
+  
   const handleAddCategory = (e) => {
     e.preventDefault();
     const payload = {
@@ -180,7 +194,7 @@ const ExpensePage = () => {
     createCategory(payload)
       .then(()=>{
         fetchCategories();
-
+        
         setCategoryData({
           name:"",
           globalCategory:false
@@ -192,16 +206,24 @@ const ExpensePage = () => {
           err
         );
       });
-  };
+    };
 
-  const showRejectionReason = (reason) => {
-    setSelectedRejectionReason(reason);
-  };
-
-
-  const closeRejectionReason = () => {
-    setSelectedRejectionReason(null);
-  };
+    // ================= REJECTION REASON HANDLERS =================
+    const showRejectionReason = (reason) => {
+      setSelectedRejectionReason(reason);
+    };
+    const closeRejectionReason = () => {
+      setSelectedRejectionReason(null);
+    };
+    
+    // ================= FILTER HANDLERS =================
+    const applyFilters = () => {
+      fetchExpenses(0);
+      setShowFilter(false);
+    };
+    const cancelFilters = () => {
+      setShowFilter(false);
+    };
 
   return (
     <div className={styles.container}>
@@ -272,12 +294,13 @@ const ExpensePage = () => {
       {/* Expense Table */}
       <div className={styles.tableContainer}>
         <div className={styles.tableHeader}>
-          {/* <h3> Expenses </h3> */}
-          {/* <p> Showing {expenses.length} of {totalExpenses} expenses </p> */}
           <h3>Expenses</h3>
           <p>
             Showing {expenses.length > 0 ? currentPage * pageSize + 1 : 0} - {Math.min((currentPage + 1) * pageSize, totalExpenses)} {" "} of {totalExpenses} expenses
           </p>
+          <button className={styles.filterButton} onClick={() => setShowFilter(true)}>
+              <i className="fas fa-filter"></i> Filter
+          </button>
         </div>
         <table className={styles.table}>
           <thead>
@@ -298,7 +321,7 @@ const ExpensePage = () => {
                   <td>{index + 1}</td>
                   <td>{exp.title}</td>
                   <td>₹ {Number(exp.amount).toLocaleString()}</td>
-                  <td>{exp.category?.name || exp.category}</td>
+                  <td>{exp.categoryName}</td>
                   {/* <td>{exp.date?.substring(0, 10)}</td> */}
                   <td>
                     {new Intl.DateTimeFormat("en-US", {
@@ -483,6 +506,74 @@ const ExpensePage = () => {
         </div>
         )
       }
+
+      { showFilter && (
+        <div className={styles.modalOverlay}>
+            <div className={styles.filterModal}>
+                <h3>Filter Expenses</h3>
+                {/* Status */}
+                <div className={styles.filterSection}>
+                  <label>Status</label>
+                  <select value={filters.status} onChange={(e)=> setFilters({...filters, status:e.target.value})}>
+                      <option value="">
+                          All
+                      </option>
+                      <option value="APPROVED">
+                          Approved
+                      </option>
+                      <option value="REJECTED">
+                          Rejected
+                      </option>
+                      <option value="PENDING">
+                          Pending
+                      </option>
+                  </select>
+                </div>
+
+                {/* Category */}
+                <div className={styles.filterSection}>
+                  <label>Category</label>
+                  <select value={filters.categoryId} onChange={(e)=> setFilters({ ...filters, categoryId:e.target.value})}>
+                      <option value="">
+                          All Categories
+                      </option>
+                      {categories.map(cat=>(
+                        <option key={cat.id} value={cat.id} >
+                          {cat.name}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+
+                {/* Date */}
+                <div className={styles.filterSection}>
+                    {/* Write code here */}
+                </div>
+                
+                {/* Sort */}
+                <div className={styles.filterSection}>
+                  <select value={filters.sort} onChange={(e)=> setFilters({...filters,sort:e.target.value})}>
+                    <option value="DESC">
+                      Newest First
+                    </option>
+                    <option value="ASC">
+                      Oldest First
+                    </option>
+                  </select>
+                </div>
+
+                <div className={styles.modalButtons}>
+                  <button type="button" className={styles.cancelButton} onClick={cancelFilters}>
+                      Cancel
+                  </button>
+                  <button type="button" className={styles.applyButton} onClick={applyFilters}>
+                      Apply
+                  </button>
+                </div>
+
+            </div>
+        </div>
+      )}
 
     </div>
   );

@@ -9,9 +9,11 @@ axios.post( REST_API_EXPENSE_URL, expenseData , {
 });
 
 // Get all expenses of a specific user
-export const getExpensesByUser = ( page=0, size=10 )=>
-axios.get(`${REST_API_EXPENSE_URL}?page=${page}&size=${size}`, { 
-  withCredentials:true 
+export const getExpensesByUser = (page = 0, size = 10, filters = {} ) =>
+axios.get(REST_API_EXPENSE_URL, {
+    params: { page, size, status: filters.status || null, categoryId: filters.categoryId || null, 
+      startDate: filters.startDate || null, endDate: filters.endDate || null, sort: filters.sort || "DESC"},
+    withCredentials: true
 });
 
 // Get recent 10 expenses of a user

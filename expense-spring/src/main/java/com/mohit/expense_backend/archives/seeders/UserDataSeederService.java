@@ -1,11 +1,19 @@
 package com.mohit.expense_backend.archives.seeders;
 
+import com.mohit.expense_backend.Entities.Category;
+import com.mohit.expense_backend.Entities.Enums.ApprovalStatus;
+import com.mohit.expense_backend.Entities.Expense;
+import com.mohit.expense_backend.Entities.Income;
 import com.mohit.expense_backend.Entities.User;
+import com.mohit.expense_backend.Repositories.CategoryRepository;
+import com.mohit.expense_backend.Repositories.ExpenseRepository;
+import com.mohit.expense_backend.Repositories.IncomeRepository;
 import com.mohit.expense_backend.Repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -15,10 +23,23 @@ import java.util.Random;
 
 @Service
 @Slf4j
+@Component
 public class UserDataSeederService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private IncomeRepository incomeRepository;
+
+    @Autowired
+    private ExpenseRepository expenseRepository;
+
+    private Random random = new Random();
+
     private BCryptPasswordEncoder passwordEncoder;
     private final JdbcTemplate jdbcTemplate;
     private final String hashedPassword;
@@ -27,7 +48,62 @@ public class UserDataSeederService {
     private static final String[] FIRST_NAMES = {"Aarav", "Satya","Mohit","Rachel","Daniel","Ashley","Léa","Lucas","Antoine","Chloe"};
     private static final String[] LAST_NAMES = {"Sharma","Patel","Reddy","Smith","Johnson","Brown","Dubois","Moreau","Lefevre","Garcia"};
     private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
-    private Random random = new Random();
+    private String[] globalCategories = {"Transport", "Shopping", "Bills", "Entertainment", "Travel", "Education", "Health", "Fuel", "Other" };
+
+    private String[] localCategories = {
+
+            "Gym",
+            "Coffee",
+            "Gaming",
+            "Snacks",
+            "Pets",
+            "Books",
+            "Bike",
+            "Family",
+            "Office",
+            "Movies"
+
+    };
+
+    private String[] incomeSources = {
+
+            "Salary",
+            "Freelance",
+            "Bonus",
+            "Stocks",
+            "Rental",
+            "Gift",
+            "Interest",
+            "Refund",
+            "Business",
+            "Cash"
+
+    };
+
+    private String[] expenseTitles = {
+
+            "Lunch",
+            "Dinner",
+            "Groceries",
+            "Movie",
+            "Uber",
+            "Electricity",
+            "Petrol",
+            "Medicine",
+            "Laptop",
+            "Shopping"
+
+    };
+
+    private String[] rejectionReasons = {
+
+            "Receipt Missing",
+            "Duplicate Entry",
+            "Policy Violation",
+            "Wrong Amount",
+            "Invalid Category"
+
+    };
 
     public UserDataSeederService(UserRepository userRepository,
                                  BCryptPasswordEncoder passwordEncoder,
@@ -43,6 +119,90 @@ public class UserDataSeederService {
         userRepository.save(user);
         return "User Added";
     }
+
+    public void seedCategories(int count) {
+        List<User> users = userRepository.findAll();
+        // ---------- GLOBAL ----------
+        for (int i = 0; i < globalCategories.length; i++) {
+            if (categoryRepository.findByName(globalCategories[i]).isEmpty()) {
+                Category c = new Category();
+                c.setName(globalCategories[i]);
+                c.setGlobalCategory(true);
+                c.setUser(null);
+                categoryRepository.save(c);
+                System.out.println("Category Number - " + i + " - Added: ");
+            }
+        }
+        // ---------- LOCAL ----------
+        for (User user : users) {
+            for (int i = 0; i < count; i++) {
+                String categoryName = localCategories[random.nextInt(localCategories.length)];
+                String fullName = user.getFirstName() + "_" + categoryName;
+                if (categoryRepository.findByName(fullName).isEmpty()) {
+                    Category c = new Category();
+                    c.setGlobalCategory(false);
+                    c.setUser(user);
+                    c.setName(fullName);
+                    categoryRepository.save(c);
+                    System.out.println("Category Number - " + i + " - Added: " + fullName);
+                }
+            }
+        }
+        System.out.println("Categories Added");
+    }
+
+    public void seedIncome(int count){
+        List<User> users = userRepository.findAll();
+        for(int i=0;i<count;i++){
+            Income income = new Income();
+            User user = users.get(random.nextInt(users.size()));
+            income.setUser(user);
+            income.setAmount(10.0 + random.nextInt(991));
+            income.setDate(randomDate());
+            income.setSource(incomeSources[random.nextInt(incomeSources.length)]);
+            int status = random.nextInt(3);
+            if(status==0) income.setStatus(ApprovalStatus.PENDING);
+            if(status==1) income.setStatus(ApprovalStatus.APPROVED);
+            if(status==2){
+                income.setStatus(ApprovalStatus.REJECTED);
+                if(user.getRoles().contains("ADMIN")){
+                    income.setRejectionReason(
+                            rejectionReasons[random.nextInt(rejectionReasons.length)]
+                    );
+                }
+            }
+            incomeRepository.save(income);
+        }
+        System.out.println("Income Added");
+    }
+
+    public void seedExpenses(int count){
+        List<User> users = userRepository.findAll();
+        for(int i=0; i<count; i++){
+            Expense expense = new Expense();
+            User user = users.get(random.nextInt(users.size()));
+            expense.setUser(user);
+            expense.setAmount(10.0 + random.nextInt(991));
+            expense.setDate(randomDate());
+            expense.setTitle(expenseTitles[random.nextInt(expenseTitles.length)]);
+            // Get only categories available to this user
+            List<Category> categories = categoryRepository.getAvailableCategories(user.getId());
+            Category category = categories.get(random.nextInt(categories.size()));
+            expense.setCategory(category);
+            int status = random.nextInt(3);
+            if(status==0) expense.setStatus(ApprovalStatus.PENDING);
+            if(status==1) expense.setStatus(ApprovalStatus.APPROVED);
+            if(status==2){
+                expense.setStatus(ApprovalStatus.REJECTED);
+                if(user.getRoles().contains("ADMIN")){
+                    expense.setRejectionReason(rejectionReasons[random.nextInt(rejectionReasons.length)]);
+                }
+            }
+            expenseRepository.save(expense);
+        }
+        System.out.println("Expenses Added");
+    }
+
 
     //    -- THREADS WITH COUNT VARIABLE --
     public void addMassUserUsingThreading(int totalCount, int threadCount, int batchSize) throws InterruptedException {
@@ -103,6 +263,13 @@ public class UserDataSeederService {
         tempUserObject.setRoles(roles[random.nextInt(roles.length)]);
 
         return tempUserObject;
+    }
+
+    private LocalDate randomDate(){
+        int year = 2022 + random.nextInt(5);
+        int month = 1 + random.nextInt(12);
+        int day = 1 + random.nextInt(28);
+        return LocalDate.of(year,month,day);
     }
 
     private LocalDate generateRandomDateOfBirth() {

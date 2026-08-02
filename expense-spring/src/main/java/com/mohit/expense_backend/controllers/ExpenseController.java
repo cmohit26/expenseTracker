@@ -3,6 +3,7 @@ import com.mohit.expense_backend.Entities.Enums.ApprovalStatus;
 import com.mohit.expense_backend.Entities.Expense;
 import com.mohit.expense_backend.Services.ExpenseServices.ExpenseService;
 import com.mohit.expense_backend.dto.ExpenseDTO;
+import com.mohit.expense_backend.dto.ExpenseResponseDTO;
 import com.mohit.expense_backend.dto.PendingExpenseDTO;
 import com.mohit.expense_backend.dto.RejectionRequestDTO;
 import org.springframework.data.domain.Page;
@@ -10,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -31,10 +33,15 @@ public class ExpenseController {
 
     // Get all expenses of user
     @GetMapping
-    public Page<Expense> getExpensesByUser(
+    public Page<ExpenseResponseDTO> getExpensesByUser(
             @RequestParam(defaultValue="0") int page,
-            @RequestParam(defaultValue="10") int size ){
-        return expenseService.getExpensesByUser( page, size );
+            @RequestParam(defaultValue="10") int size,
+            @RequestParam(required = false) ApprovalStatus status,
+            @RequestParam(required = false) Integer categoryId,
+            @RequestParam(required = false) LocalDate startDate,
+            @RequestParam(required = false) LocalDate endDate,
+            @RequestParam(defaultValue = "DESC") String sort){
+        return expenseService.getExpensesByUser( page, size, status, categoryId, startDate, endDate, sort );
     }
 
     // Get recent 10

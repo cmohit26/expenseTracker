@@ -13,13 +13,16 @@ public class UserSeederRunner {
 
         UserDataSeederService seeder = context.getBean(UserDataSeederService.class);
 
-        int numberOfUsers = 20;
+        int numberOfUsers = 1;
         int threadCount = 10;
         int batchSize = 50;
 
         long startTime = System.nanoTime();
 
-        seeder.addMassUserUsingThreading(numberOfUsers, threadCount, batchSize);
+//        seeder.addMassUserUsingThreading(numberOfUsers, threadCount, batchSize);
+        seeder.seedCategories(10);
+//        seeder.seedIncome(100);
+//        seeder.seedExpenses(100);
 
         long endTime = System.nanoTime();
         double durationSeconds = (endTime - startTime) / 1_000_000_000.0;

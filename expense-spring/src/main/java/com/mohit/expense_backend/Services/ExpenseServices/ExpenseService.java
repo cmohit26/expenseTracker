@@ -7,12 +7,15 @@ import com.mohit.expense_backend.Entities.User;
 import com.mohit.expense_backend.Repositories.CategoryRepository;
 import com.mohit.expense_backend.Repositories.ExpenseRepository;
 import com.mohit.expense_backend.Security.CurrentUserService;
+import com.mohit.expense_backend.Specifications.ExpenseSpecification;
 import com.mohit.expense_backend.dto.ExpenseDTO;
+import com.mohit.expense_backend.dto.ExpenseResponseDTO;
 import com.mohit.expense_backend.dto.PendingExpenseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -50,10 +53,23 @@ public class ExpenseService {
         return expenseRepository.save(expense);
     }
 
-    public Page<Expense> getExpensesByUser(int page, int size ){
+    public Page<ExpenseResponseDTO> getExpensesByUser( int page, int size,
+            ApprovalStatus status, Integer categoryId, LocalDate startDate, LocalDate endDate, String sort ){
+
         Integer userId = currentUserService.getCurrentUserId();
-        Pageable pageable = PageRequest.of(page, size, Sort.by("date").descending());
-        return expenseRepository.findByUserIdOrderByDateDesc(userId, pageable);
+
+        Sort sorting = sort.equalsIgnoreCase("ASC")
+                ? Sort.by("date").ascending()
+                : Sort.by("date").descending();
+
+        Pageable pageable = PageRequest.of( page, size, sorting );
+
+        Specification<Expense> specification =
+                ExpenseSpecification.filterExpenses( userId, status, categoryId, startDate, endDate );
+
+        Page<Expense> expenses = expenseRepository.findAll(specification, pageable);
+
+        return expenses.map(this::mapToResponseDTO);
     }
 
     public List<Expense> getRecentExpenses() {
@@ -135,6 +151,19 @@ public class ExpenseService {
         expense.setStatus(ApprovalStatus.REJECTED);
         expense.setRejectionReason(reason);
         return expenseRepository.save(expense);
+    }
+
+    private ExpenseResponseDTO mapToResponseDTO(Expense expense){
+        return new ExpenseResponseDTO(
+            expense.getId(),
+            expense.getTitle(),
+            expense.getAmount(),
+            expense.getDate(),
+            expense.getStatus(),
+            expense.getRejectionReason(),
+            expense.getCategory().getId(),
+            expense.getCategory().getName()
+        );
     }
 
 }
