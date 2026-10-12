@@ -42,6 +42,13 @@ public class UserService {
     @Autowired
     private final BCryptPasswordEncoder passwordEncoder;
 
+    public List<UserResponseDTO> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(this::mapToResponseDTO)
+                .toList();
+    }
+
     public UserResponseDTO mapToResponseDTO(User user) {
         UserResponseDTO dto = new UserResponseDTO();
         dto.setId(user.getId());
@@ -72,13 +79,6 @@ public class UserService {
     public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-    }
-
-    public List<UserResponseDTO> getAllUsers() {
-        return userRepository.findAll()
-                .stream()
-                .map(this::mapToResponseDTO)
-                .toList();
     }
 
     public User findByEmail(String email) {
